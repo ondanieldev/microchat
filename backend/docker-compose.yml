@@ -1,0 +1,18 @@
+version: '2.2'
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: microchat_postgres
+    environment:
+      - POSTGRESQL_PASSWORD=123456
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_DATABASE=microchat
+    ports:
+      - 5432:5432
+  redis:
+    image: bitnami/redis:latest
+    container_name: microchat_redis
+    environment:
+      - REDIS_PASSWORD=123456
+    ports:
+      - 6379:6379

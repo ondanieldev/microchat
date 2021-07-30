@@ -19,7 +19,9 @@
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pg": "^8.7.1",
+    "typeorm": "^0.2.35"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
