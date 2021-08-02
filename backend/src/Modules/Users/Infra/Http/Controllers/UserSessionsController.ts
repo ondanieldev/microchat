@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 
-import CreateUser from 'Modules/Users/Services/CreateUser';
+import CreateUserSession from 'Modules/Users/Services/CreateUserSession';
 
 class UsersController {
   public async create(
@@ -11,11 +11,11 @@ class UsersController {
   ): Promise<Response> {
     const { body } = request;
 
-    const createUser = container.resolve(CreateUser);
+    const createUserSession = container.resolve(CreateUserSession);
 
-    const user = await createUser.execute(body);
+    const data = await createUserSession.execute(body);
 
-    return response.status(201).json(user);
+    return response.status(200).json(data);
   }
 }
 
