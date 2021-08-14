@@ -10,7 +10,13 @@
     "rootDir": "./src",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "typeRoots": ["@types", "node_modules/@types"],
-    "baseUrl": "./src"
+    "typeRoots": ["./@types", "./node_modules/@types"],
+    "strictPropertyInitialization": false,
+    "baseUrl": "./src",
+    "paths": {
+      "Config/*": ["Config/*"],
+      "Modules/*": ["Modules/*"],
+      "Shared/*": ["Shared/*"]
+    }
   }
 }
