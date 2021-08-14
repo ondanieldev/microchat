@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 
 @Entity('users')
 class User {
@@ -27,6 +29,9 @@ class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Room, room => room.moderator)
+  rooms: Room[];
 }
 
 export default User;
