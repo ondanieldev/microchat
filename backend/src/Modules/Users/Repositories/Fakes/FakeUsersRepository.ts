@@ -30,6 +30,13 @@ class FakeUsersRepository implements IUsersRepository {
       ),
     );
   }
+
+  public async save(user: User): Promise<void> {
+    const index = this.users.findIndex(u => u.id === user.id);
+    if (index !== -1) {
+      this.users[index] = { ...user };
+    }
+  }
 }
 
 export default FakeUsersRepository;

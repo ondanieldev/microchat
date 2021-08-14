@@ -24,6 +24,10 @@ class UsersRepository implements IUsersRepository {
       where: data,
     });
   }
+
+  public async save(user: User): Promise<void> {
+    await this.ormRepository.save(user);
+  }
 }
 
 export default UsersRepository;

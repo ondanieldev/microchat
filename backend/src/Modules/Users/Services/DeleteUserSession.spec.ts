@@ -3,33 +3,37 @@ import 'reflect-metadata';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
 import FakeTokenProvider from 'Shared/Containers/Providers/TokenProvider/Fakes/FakeTokenProvider';
 import AppError from 'Shared/Errors/AppError';
+import User from '../Infra/TypeORM/Entities/User';
 import FakeUsersRepository from '../Repositories/Fakes/FakeUsersRepository';
 import CreateUser from './CreateUser';
 import CreateUserSession from './CreateUserSession';
+import DeleteUserSession from './DeleteUserSession';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let fakeTokenProvider: FakeTokenProvider;
 let createUser: CreateUser;
 let createUserSession: CreateUserSession;
+let deleteUserSession: DeleteUserSession;
 
-describe('CreateUserSession', () => {
+describe('DeleteUserSession', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     fakeTokenProvider = new FakeTokenProvider();
 
     createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
-
     createUserSession = new CreateUserSession(
       fakeUsersRepository,
       fakeHashProvider,
       fakeTokenProvider,
     );
+
+    deleteUserSession = new DeleteUserSession(fakeUsersRepository);
   });
 
-  it('should be able to authenticate an user', async () => {
-    const user = await createUser.execute({
+  it('should be able to delete user session', async () => {
+    await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
     });
@@ -39,30 +43,18 @@ describe('CreateUserSession', () => {
       password: 'verysecretpassword',
     });
 
-    expect(authUser).toHaveProperty('token');
-    expect(authUser.id).toBe(user.id);
-  });
+    await deleteUserSession.execute(authUser);
 
-  it('should not be able to authenticate a non-existing user', async () => {
-    expect(
-      createUserSession.execute({
-        nickname: 'I am not created yet',
-        password: 'verysecretpassword',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
-  });
-
-  it('should not be able to authenticate a user with wrong password', async () => {
-    const user = await createUser.execute({
-      nickname: 'John Doe',
-      password: 'verysecretpassword',
+    const user = await fakeUsersRepository.findOne({
+      id: authUser.id,
     });
 
-    expect(
-      createUserSession.execute({
-        nickname: user.nickname,
-        password: 'incorrect password',
-      }),
-    ).rejects.toBeInstanceOf(AppError);
+    expect(user?.token).toBeUndefined();
+  });
+
+  it('should not be able to delete a session of a non-existing user', async () => {
+    const user = new User();
+
+    expect(deleteUserSession.execute(user)).rejects.toBeInstanceOf(AppError);
   });
 });

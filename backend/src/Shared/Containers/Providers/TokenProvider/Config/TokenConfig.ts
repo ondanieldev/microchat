@@ -1,9 +1,15 @@
 interface ITokenConfig {
-  secret: string;
-  expiresIn: string;
+  provider: 'jwt';
+  jwt: {
+    secret: string;
+    expiresIn: string;
+  };
 }
 
 export default {
-  secret: process.env.TOKEN_SECRET || '',
-  expiresIn: '1d',
+  provider: process.env.TOKEN_PROVIDER,
+  jwt: {
+    secret: process.env.TOKEN_JWT_SECRET || '',
+    expiresIn: '1d',
+  },
 } as ITokenConfig;

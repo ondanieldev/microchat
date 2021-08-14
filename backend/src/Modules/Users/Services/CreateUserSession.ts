@@ -11,13 +11,8 @@ interface IRequest {
   password: string;
 }
 
-interface IResponse {
-  user: User;
-  token: string;
-}
-
 @injectable()
-class AuthenticateUserService {
+class CreateUserSession {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -29,7 +24,7 @@ class AuthenticateUserService {
     private tokenProvider: ITokenProvider,
   ) {}
 
-  public async execute({ nickname, password }: IRequest): Promise<IResponse> {
+  public async execute({ nickname, password }: IRequest): Promise<User> {
     const user = await this.usersRepository.findOne({
       nickname,
     });
@@ -47,8 +42,11 @@ class AuthenticateUserService {
 
     const token = this.tokenProvider.generate(user.id);
 
-    return { user, token };
+    user.token = token;
+    await this.usersRepository.save(user);
+
+    return user;
   }
 }
 
-export default AuthenticateUserService;
+export default CreateUserSession;

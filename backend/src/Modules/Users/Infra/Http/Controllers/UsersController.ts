@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import CreateUser from 'Modules/Users/Services/CreateUser';
 
@@ -15,7 +16,7 @@ class UsersController {
 
     const user = await createUser.execute(body);
 
-    return response.status(201).json(user);
+    return response.status(201).json(classToClass(user));
   }
 }
 
