@@ -14,7 +14,7 @@ class FakeTokenProvider implements ITokenProvider {
         subject,
       };
     }
-    throw new AppError('Invalid token!', 403);
+    throw new AppError('Invalid token!', 401);
   }
 }
 

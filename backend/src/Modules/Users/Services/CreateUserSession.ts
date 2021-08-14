@@ -29,7 +29,7 @@ class CreateUserSession {
       nickname,
     });
     if (!user) {
-      throw new AppError('Wrong credentials!', 403);
+      throw new AppError('Wrong credentials!', 401);
     }
 
     const checkIfPasswordIsCorrrect = await this.hashProvider.compare(
@@ -37,7 +37,7 @@ class CreateUserSession {
       user.password,
     );
     if (!checkIfPasswordIsCorrrect) {
-      throw new AppError('Wrong credentials!', 403);
+      throw new AppError('Wrong credentials!', 401);
     }
 
     const token = this.tokenProvider.generate(user.id);

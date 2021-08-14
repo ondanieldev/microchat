@@ -23,7 +23,7 @@ class JWTTokenProvider implements ITokenProvider {
     try {
       return jwt.verify(token, secret) as ITokenPayload;
     } catch (e) {
-      throw new AppError('Invalid token!', 403);
+      throw new AppError('Invalid token!', 401);
     }
   }
 }
