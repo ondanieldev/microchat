@@ -28,6 +28,7 @@ export default class CreateTableRooms1627609114079
           {
             name: 'moderator_id',
             type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'created_at',
@@ -50,7 +51,7 @@ export default class CreateTableRooms1627609114079
         columnNames: ['moderator_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
-        onDelete: 'CASCADE',
+        onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       }),
     );

@@ -17,8 +17,8 @@ class Room {
   @Column()
   name: string;
 
-  @Column()
-  moderator_id: string;
+  @Column({ nullable: true })
+  moderator_id?: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -27,7 +27,7 @@ class Room {
   updated_at: Date;
 
   @ManyToOne(() => User, moderator => moderator.rooms)
-  moderator: User;
+  moderator?: User;
 }
 
 export default Room;
