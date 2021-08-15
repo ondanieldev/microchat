@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import RoomUser from 'Modules/Rooms/Infra/TypeORM/Entities/RoomUser';
 
@@ -23,6 +23,7 @@ class User {
   password: string;
 
   @Column({ nullable: true })
+  @Expose({ groups: ['theirself'] })
   token?: string;
 
   @CreateDateColumn()

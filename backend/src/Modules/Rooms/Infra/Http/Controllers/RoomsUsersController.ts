@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import JoinRoom from 'Modules/Rooms/Services/JoinRoom';
 import LeaveRoom from 'Modules/Rooms/Services/LeaveRoom';
 import KickUser from 'Modules/Rooms/Services/KickUser';
 import IndexRoomsUsers from 'Modules/Rooms/Services/IndexRoomsUsers';
-import { classToClass } from 'class-transformer';
 
 class RoomsUsersController {
   public async join(
