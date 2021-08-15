@@ -17,7 +17,7 @@ class AuthMiddleware {
 
     const [bearer, token] = header.split(' ');
     if (bearer !== 'Bearer') {
-      throw new AppError('Authorization header musty be bearer type!', 401);
+      throw new AppError('Authorization header must be bearer type!', 401);
     }
 
     const authenticateUser = container.resolve(AuthenticateUser);

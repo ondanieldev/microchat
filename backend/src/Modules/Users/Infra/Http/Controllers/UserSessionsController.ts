@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import CreateUserSession from 'Modules/Users/Services/CreateUserSession';
 import DeleteUserSession from 'Modules/Users/Services/DeleteUserSession';
-import { classToClass } from 'class-transformer';
 
 class UsersController {
   public async create(
@@ -17,7 +17,9 @@ class UsersController {
 
     const user = await createUserSession.execute(body);
 
-    return response.status(201).json(classToClass(user));
+    return response
+      .status(201)
+      .json(classToClass(user, { groups: ['theirself'] }));
   }
 
   public async delete(

@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import JoinRoom from 'Modules/Rooms/Services/JoinRoom';
 import LeaveRoom from 'Modules/Rooms/Services/LeaveRoom';
 import KickUser from 'Modules/Rooms/Services/KickUser';
+import IndexRoomsUsers from 'Modules/Rooms/Services/IndexRoomsUsers';
 
-class RoomsController {
+class RoomsUsersController {
   public async join(
     request: Request,
     response: Response,
@@ -29,13 +31,13 @@ class RoomsController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { id } = request.params;
+    const { room_id } = request.params;
 
     const leaveRoom = container.resolve(LeaveRoom);
 
     await leaveRoom.execute({
       actor: user,
-      id,
+      room_id,
     });
 
     return response.status(204).json();
@@ -57,6 +59,24 @@ class RoomsController {
 
     return response.status(204).json();
   }
+
+  public async index(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+    const { room_id } = request.params;
+
+    const indexRoomsUsers = container.resolve(IndexRoomsUsers);
+
+    const users = await indexRoomsUsers.execute({
+      actor: user,
+      room_id,
+    });
+
+    return response.status(200).json(classToClass(users));
+  }
 }
 
-export default RoomsController;
+export default RoomsUsersController;

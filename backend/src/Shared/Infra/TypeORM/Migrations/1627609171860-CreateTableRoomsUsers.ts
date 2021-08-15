@@ -5,13 +5,13 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreateTableJoins1627609171860
+export default class CreateTableRoomsUsers1627609171860
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'joins',
+        name: 'rooms_users',
         columns: [
           {
             name: 'id',
@@ -44,9 +44,9 @@ export default class CreateTableJoins1627609171860
     );
 
     await queryRunner.createForeignKey(
-      'joins',
+      'rooms_users',
       new TableForeignKey({
-        name: 'joins_user_id',
+        name: 'rooms_users_user_id',
         columnNames: ['user_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
@@ -56,9 +56,9 @@ export default class CreateTableJoins1627609171860
     );
 
     await queryRunner.createForeignKey(
-      'joins',
+      'rooms_users',
       new TableForeignKey({
-        name: 'joins_room_id',
+        name: 'rooms_users_room_id',
         columnNames: ['room_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'rooms',
@@ -69,10 +69,10 @@ export default class CreateTableJoins1627609171860
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('joins', 'joins_room_id');
+    await queryRunner.dropForeignKey('rooms_users', 'rooms_users_room_id');
 
-    await queryRunner.dropForeignKey('joins', 'joins_user_id');
+    await queryRunner.dropForeignKey('rooms_users', 'rooms_users_user_id');
 
-    await queryRunner.dropTable('joins');
+    await queryRunner.dropTable('rooms_users');
   }
 }

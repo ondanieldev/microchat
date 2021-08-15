@@ -1,16 +1,18 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 
-@Entity('joins')
-class Join {
+@Entity('rooms_users')
+class RoomUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,10 +22,10 @@ class Join {
   @Column()
   room_id: string;
 
-  @Column()
+  @CreateDateColumn()
   created_at: string;
 
-  @Column()
+  @UpdateDateColumn()
   updated_at: string;
 
   @ManyToOne(() => User, user => user.joins)
@@ -35,4 +37,4 @@ class Join {
   room: Room;
 }
 
-export default Join;
+export default RoomUser;

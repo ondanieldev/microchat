@@ -16,7 +16,9 @@ class UsersController {
 
     const user = await createUser.execute(body);
 
-    return response.status(201).json(classToClass(user));
+    return response
+      .status(201)
+      .json(classToClass(user, { groups: ['theirself'] }));
   }
 }
 

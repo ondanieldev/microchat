@@ -6,7 +6,7 @@ import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
 import ICreateRoom from '../DTOs/ICreateRoom';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 import Room from '../Infra/TypeORM/Entities/Room';
-import IJoinsRepository from '../Repositories/IJoinsRepository';
+import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 
 interface IRequest {
   actor: User;
@@ -22,8 +22,8 @@ class CreateRoom {
     @inject('RoomsRepository')
     private roomsRepository: IRoomsRepository,
 
-    @inject('JoinsRepository')
-    private joinsRepository: IJoinsRepository,
+    @inject('RoomsUsersRepository')
+    private roomsUsersRepository: IRoomsUsersRepository,
   ) {}
 
   public async execute({ actor, data }: IRequest): Promise<Room> {
@@ -39,7 +39,7 @@ class CreateRoom {
       ...data,
     });
 
-    await this.joinsRepository.create({
+    await this.roomsUsersRepository.create({
       room_id: room.id,
       user_id: user.id,
     });

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
-import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
+import AppError from 'Shared/Errors/AppError';
 import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 
 interface IRequest {
@@ -10,23 +10,26 @@ interface IRequest {
 }
 
 @injectable()
-class LeaveRoom {
+class IndexRoomsUsers {
   constructor(
     @inject('RoomsUsersRepository')
     private roomsUsersRepository: IRoomsUsersRepository,
   ) {}
 
-  public async execute({ actor, room_id }: IRequest): Promise<void> {
-    const roomUser = await this.roomsUsersRepository.findOne({
+  public async execute({ actor, room_id }: IRequest): Promise<User[]> {
+    const userIsParticipant = await this.roomsUsersRepository.findOne({
       room_id,
       user_id: actor.id,
     });
-    if (!roomUser) {
+    if (!userIsParticipant) {
       throw new AppError('You are not a participant of this room!', 403);
     }
 
-    await this.roomsUsersRepository.delete(roomUser.id);
+    const roomUsers = await this.roomsUsersRepository.find({
+      room_id,
+    });
+    return roomUsers.map(room => room.user);
   }
 }
 
-export default LeaveRoom;
+export default IndexRoomsUsers;

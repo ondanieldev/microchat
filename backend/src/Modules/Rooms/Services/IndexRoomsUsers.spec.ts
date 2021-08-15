@@ -4,49 +4,23 @@ import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepos
 import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
-import LeaveRoom from './LeaveRoom';
+import IndexRoomsUsers from './IndexRoomsUsers';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
-let leaveRoom: LeaveRoom;
+let indexRoomsUsers: IndexRoomsUsers;
 
-describe('LeaveRoom', () => {
+describe('IndexRooms', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
     fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
 
-    leaveRoom = new LeaveRoom(fakeRoomsUsersRepository);
+    indexRoomsUsers = new IndexRoomsUsers(fakeRoomsUsersRepository);
   });
 
-  it('should be able to leave a room', async () => {
-    const deleteRoomUser = jest.spyOn(fakeRoomsUsersRepository, 'delete');
-
-    const user = await fakeUsersRepository.create({
-      nickname: 'John Doe',
-      password: 'verysecretpassword',
-    });
-
-    const room = await fakeRoomsRepository.create({
-      moderator_id: user.id,
-      name: 'My friends',
-    });
-
-    const roomUser = await fakeRoomsUsersRepository.create({
-      user_id: user.id,
-      room_id: room.id,
-    });
-
-    await leaveRoom.execute({
-      actor: user,
-      room_id: room.id,
-    });
-
-    expect(deleteRoomUser).toBeCalledWith(roomUser.id);
-  });
-
-  it('should not be able to leave a room if the user are not participating in it', async () => {
+  it('should be able to index rooms users', async () => {
     const user = await fakeUsersRepository.create({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -58,19 +32,53 @@ describe('LeaveRoom', () => {
     });
 
     const room = await fakeRoomsRepository.create({
-      moderator_id: user.id,
       name: 'My friends',
+      moderator_id: user.id,
     });
 
     await fakeRoomsUsersRepository.create({
-      user_id: user.id,
       room_id: room.id,
+      user_id: user.id,
+    });
+
+    await fakeRoomsUsersRepository.create({
+      room_id: room.id,
+      user_id: anotherUser.id,
+    });
+
+    const roomsUsers = await indexRoomsUsers.execute({
+      room_id: room.id,
+      actor: user,
+    });
+
+    expect(roomsUsers).toHaveLength(2);
+  });
+
+  it('should be able to index rooms users if you are not participating in it', async () => {
+    const user = await fakeUsersRepository.create({
+      nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const nonParticipatingUser = await fakeUsersRepository.create({
+      nickname: 'Jane Doe',
+      password: 'verysecretpassword',
+    });
+
+    const room = await fakeRoomsRepository.create({
+      name: 'My friends',
+      moderator_id: user.id,
+    });
+
+    await fakeRoomsUsersRepository.create({
+      room_id: room.id,
+      user_id: user.id,
     });
 
     expect(
-      leaveRoom.execute({
-        actor: anotherUser,
+      indexRoomsUsers.execute({
         room_id: room.id,
+        actor: nonParticipatingUser,
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
