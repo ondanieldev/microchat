@@ -24,6 +24,10 @@ class JoinsRepository implements IJoinsRepository {
       where: data,
     });
   }
+
+  public async delete(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
+  }
 }
 
 export default JoinsRepository;

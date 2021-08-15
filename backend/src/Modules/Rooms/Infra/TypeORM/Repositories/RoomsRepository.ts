@@ -4,6 +4,7 @@ import IRoomsRepository from 'Modules/Rooms/Repositories/IRoomsRepository';
 import ICreateRoom from 'Modules/Rooms/DTOs/ICreateRoom';
 import IPaginatedRooms from 'Modules/Rooms/DTOs/IPaginatedRooms';
 import IFilterRooms from 'Modules/Rooms/DTOs/IFilterRooms';
+import IFilterRoom from 'Modules/Rooms/DTOs/IFilterRoom';
 import Room from '../Entities/Room';
 
 @EntityRepository(Room)
@@ -35,6 +36,12 @@ class RoomsRepository implements IRoomsRepository {
       entities: response[0],
       total: response[1],
     };
+  }
+
+  public async findOne(data: IFilterRoom): Promise<Room | undefined> {
+    return this.ormRepository.findOne({
+      where: data,
+    });
   }
 }
 
