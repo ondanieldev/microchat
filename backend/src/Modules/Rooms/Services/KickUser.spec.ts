@@ -57,6 +57,31 @@ describe('KickUser', () => {
     expect(deleteRoomUser).toBeCalledWith(roomUser.id);
   });
 
+  it('should not be able to kick a user out of a room if you are the user', async () => {
+    const user = await fakeUsersRepository.create({
+      nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const room = await fakeRoomsRepository.create({
+      moderator_id: user.id,
+      name: 'My friends',
+    });
+
+    await fakeRoomsUsersRepository.create({
+      user_id: user.id,
+      room_id: room.id,
+    });
+
+    expect(
+      kickUser.execute({
+        actor: user,
+        room_id: room.id,
+        user_id: user.id,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
   it('should not be able to kick a user out of a room for which you are not a moderator', async () => {
     const user = await fakeUsersRepository.create({
       nickname: 'John Doe',
@@ -72,6 +97,31 @@ describe('KickUser', () => {
       kickUser.execute({
         actor: user,
         room_id: 'another room id',
+        user_id: anotherUser.id,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to kick a user out of a room if you are not participating in it', async () => {
+    const user = await fakeUsersRepository.create({
+      nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const anotherUser = await fakeUsersRepository.create({
+      nickname: 'Jane Doe',
+      password: 'verysecretpassword',
+    });
+
+    const room = await fakeRoomsRepository.create({
+      moderator_id: user.id,
+      name: 'My friends',
+    });
+
+    expect(
+      kickUser.execute({
+        actor: user,
+        room_id: room.id,
         user_id: anotherUser.id,
       }),
     ).rejects.toBeInstanceOf(AppError);

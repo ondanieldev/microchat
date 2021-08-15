@@ -22,6 +22,7 @@ class RoomsUsersRepository implements IRoomsUsersRepository {
   public async findOne(data: IFilterRoomsUsers): Promise<RoomUser | undefined> {
     return this.ormRepository.findOne({
       where: data,
+      relations: ['room'],
     });
   }
 

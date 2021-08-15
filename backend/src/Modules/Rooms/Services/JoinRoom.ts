@@ -44,6 +44,14 @@ class JoinRoom {
       throw new AppError('Room not found!', 404);
     }
 
+    const roomUser = await this.roomsUsersRepository.findOne({
+      room_id: room.id,
+      user_id: user.id,
+    });
+    if (roomUser) {
+      throw new AppError('You are already a participant of this room!', 403);
+    }
+
     return this.roomsUsersRepository.create({
       room_id: room.id,
       user_id: user.id,

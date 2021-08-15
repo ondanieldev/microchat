@@ -22,12 +22,26 @@ class KickUser {
   ) {}
 
   public async execute({ actor, room_id, user_id }: IRequest): Promise<void> {
+    if (actor.id === user_id) {
+      throw new AppError(
+        'You cannot kick yourself! If you want to leave the room, use the "leave room service" instead.',
+      );
+    }
+
     const room = await this.roomsRepository.findOne({
       id: room_id,
       moderator_id: actor.id,
     });
     if (!room) {
       throw new AppError('You are not a moderator of this room!', 403);
+    }
+
+    const moderatorIsJoined = await this.roomsUsersRepository.findOne({
+      room_id,
+      user_id: actor.id,
+    });
+    if (!moderatorIsJoined) {
+      throw new AppError('You are not participating of this room!', 403);
     }
 
     const roomUser = await this.roomsUsersRepository.findOne({

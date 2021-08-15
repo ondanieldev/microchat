@@ -26,7 +26,7 @@ describe('JoinRoom', () => {
     );
   });
 
-  it('should be able to enter a room', async () => {
+  it('should be able to join a room', async () => {
     const user = await fakeUsersRepository.create({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -48,7 +48,7 @@ describe('JoinRoom', () => {
     expect(roomUser.room_id).toBe(room.id);
   });
 
-  it('should not be able to enter a room if the user does not exist', async () => {
+  it('should not be able to join a room if the user does not exist', async () => {
     const user = await fakeUsersRepository.create({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -71,7 +71,7 @@ describe('JoinRoom', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to enter a non-existing room', async () => {
+  it('should not be able to join a non-existing room', async () => {
     const user = await fakeUsersRepository.create({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -84,6 +84,32 @@ describe('JoinRoom', () => {
         actor: user,
         data: {
           room_id: invalidRoom.id,
+        },
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to join a room if you are already a participant in it', async () => {
+    const user = await fakeUsersRepository.create({
+      nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const room = await fakeRoomsRepository.create({
+      moderator_id: user.id,
+      name: 'My friends',
+    });
+
+    await fakeRoomsUsersRepository.create({
+      room_id: room.id,
+      user_id: user.id,
+    });
+
+    await expect(
+      joinRoom.execute({
+        actor: user,
+        data: {
+          room_id: room.id,
         },
       }),
     ).rejects.toBeInstanceOf(AppError);
