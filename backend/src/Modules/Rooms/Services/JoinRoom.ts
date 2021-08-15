@@ -3,18 +3,18 @@ import { inject, injectable } from 'tsyringe';
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
-import ICreateRoom from '../DTOs/ICreateRoom';
+import ICreateJoin from 'DTOs/ICreateJoin';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
-import Room from '../Infra/TypeORM/Entities/Room';
 import IJoinsRepository from '../Repositories/IJoinsRepository';
+import Join from '../Infra/TypeORM/Entities/Join';
 
 interface IRequest {
   actor: User;
-  data: Omit<ICreateRoom, 'moderator_id'>;
+  data: Omit<ICreateJoin, 'user_id'>;
 }
 
 @injectable()
-class CreateRoom {
+class JoinRoom {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -26,7 +26,10 @@ class CreateRoom {
     private joinsRepository: IJoinsRepository,
   ) {}
 
-  public async execute({ actor, data }: IRequest): Promise<Room> {
+  public async execute({
+    actor,
+    data: { room_id, ...rest },
+  }: IRequest): Promise<Join> {
     const user = await this.usersRepository.findOne({
       id: actor.id,
     });
@@ -34,18 +37,19 @@ class CreateRoom {
       throw new AppError('User not found!', 404);
     }
 
-    const room = await this.roomsRepository.create({
-      moderator_id: actor.id,
-      ...data,
+    const room = await this.roomsRepository.findOne({
+      id: room_id,
     });
+    if (!room) {
+      throw new AppError('Room not found!', 404);
+    }
 
-    await this.joinsRepository.create({
+    return this.joinsRepository.create({
       room_id: room.id,
       user_id: user.id,
+      ...rest,
     });
-
-    return room;
   }
 }
 
-export default CreateRoom;
+export default JoinRoom;

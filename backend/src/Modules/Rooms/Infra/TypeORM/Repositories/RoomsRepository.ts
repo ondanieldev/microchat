@@ -1,10 +1,4 @@
-import {
-  EntityRepository,
-  getRepository,
-  IsNull,
-  Like,
-  Repository,
-} from 'typeorm';
+import { EntityRepository, getRepository, Repository } from 'typeorm';
 
 import IRoomsRepository from 'Modules/Rooms/Repositories/IRoomsRepository';
 import ICreateRoom from 'Modules/Rooms/DTOs/ICreateRoom';
