@@ -5,14 +5,14 @@ import CreateUser from 'Modules/Users/Services/CreateUser';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
 import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
-import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
+import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
 import CreateRoom from './CreateRoom';
 import JoinRoom from './JoinRoom';
 import LeaveRoom from './LeaveRoom';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
-let fakeJoinsRepository: FakeJoinsRepository;
+let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
@@ -23,24 +23,24 @@ describe('LeaveRoom', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
-    fakeJoinsRepository = new FakeJoinsRepository();
+    fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
     joinRoom = new JoinRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
-    leaveRoom = new LeaveRoom(fakeJoinsRepository);
+    leaveRoom = new LeaveRoom(fakeRoomsUsersRepository);
   });
 
   it('should be able to leave a room', async () => {
-    const deleteJoin = jest.spyOn(fakeJoinsRepository, 'delete');
+    const deleteRoomUser = jest.spyOn(fakeRoomsUsersRepository, 'delete');
 
     const user = await createUser.execute({
       nickname: 'John Doe',
@@ -71,7 +71,7 @@ describe('LeaveRoom', () => {
       room_id: room.id,
     });
 
-    expect(deleteJoin).toBeCalledWith(join.id);
+    expect(deleteRoomUser).toBeCalledWith(join.id);
   });
 
   it('should not be able to leave a room if the user are not participating in it', async () => {

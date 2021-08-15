@@ -7,11 +7,11 @@ import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/Fak
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import CreateRoom from './CreateRoom';
-import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
+import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
-let fakeJoinsRepository: FakeJoinsRepository;
+let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
@@ -20,13 +20,13 @@ describe('CreateRoom', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
-    fakeJoinsRepository = new FakeJoinsRepository();
+    fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
   });
 

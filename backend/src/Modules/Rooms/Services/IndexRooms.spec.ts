@@ -4,13 +4,13 @@ import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepos
 import CreateUser from 'Modules/Users/Services/CreateUser';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
-import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
+import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
 import CreateRoom from './CreateRoom';
 import IndexRooms from './IndexRooms';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
-let fakeJoinsRepository: FakeJoinsRepository;
+let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
@@ -20,13 +20,13 @@ describe('IndexRooms', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
-    fakeJoinsRepository = new FakeJoinsRepository();
+    fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
     indexRooms = new IndexRooms(fakeRoomsRepository);
   });

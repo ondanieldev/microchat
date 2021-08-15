@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
-import Join from 'Modules/Rooms/Infra/TypeORM/Entities/Join';
+import RoomUser from 'Modules/Rooms/Infra/TypeORM/Entities/RoomUser';
 
 @Entity('rooms')
 class Room {
@@ -33,8 +33,8 @@ class Room {
   @JoinColumn({ name: 'moderator_id' })
   moderator?: User;
 
-  @OneToMany(() => Join, join => join.room)
-  joins: Join[];
+  @OneToMany(() => RoomUser, roomUser => roomUser.room)
+  joins: RoomUser[];
 }
 
 export default Room;

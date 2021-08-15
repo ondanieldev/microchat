@@ -11,8 +11,8 @@ import {
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 
-@Entity('joins')
-class Join {
+@Entity('rooms_users')
+class RoomUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -37,4 +37,4 @@ class Join {
   room: Room;
 }
 
-export default Join;
+export default RoomUser;

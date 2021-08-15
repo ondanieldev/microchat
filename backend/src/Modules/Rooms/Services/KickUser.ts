@@ -2,8 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
-import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
-import IJoinsRepository from '../Repositories/IJoinsRepository';
+import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 
 interface IRequest {
@@ -15,14 +14,11 @@ interface IRequest {
 @injectable()
 class KickUser {
   constructor(
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
-
     @inject('RoomsRepository')
     private roomsRepository: IRoomsRepository,
 
-    @inject('JoinsRepository')
-    private joinsRepository: IJoinsRepository,
+    @inject('RoomsUsersRepository')
+    private roomsUsersRepository: IRoomsUsersRepository,
   ) {}
 
   public async execute({ actor, room_id, user_id }: IRequest): Promise<void> {
@@ -34,15 +30,15 @@ class KickUser {
       throw new AppError('You are not a moderator of this room!', 403);
     }
 
-    const join = await this.joinsRepository.findOne({
+    const roomUser = await this.roomsUsersRepository.findOne({
       room_id,
       user_id,
     });
-    if (!join) {
+    if (!roomUser) {
       throw new AppError('This user does not participate of this room!', 404);
     }
 
-    await this.joinsRepository.delete(join.id);
+    await this.roomsUsersRepository.delete(roomUser.id);
   }
 }
 

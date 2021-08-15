@@ -5,7 +5,7 @@ import JoinRoom from 'Modules/Rooms/Services/JoinRoom';
 import LeaveRoom from 'Modules/Rooms/Services/LeaveRoom';
 import KickUser from 'Modules/Rooms/Services/KickUser';
 
-class RoomsController {
+class RoomsUsersController {
   public async join(
     request: Request,
     response: Response,
@@ -59,4 +59,4 @@ class RoomsController {
   }
 }
 
-export default RoomsController;
+export default RoomsUsersController;

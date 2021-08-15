@@ -6,14 +6,14 @@ import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/Fak
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
-import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
+import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
 import CreateRoom from './CreateRoom';
 import JoinRoom from './JoinRoom';
 import Room from '../Infra/TypeORM/Entities/Room';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
-let fakeJoinsRepository: FakeJoinsRepository;
+let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
@@ -23,18 +23,18 @@ describe('JoinRoom', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
-    fakeJoinsRepository = new FakeJoinsRepository();
+    fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
     joinRoom = new JoinRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
   });
 
@@ -56,15 +56,15 @@ describe('JoinRoom', () => {
       },
     });
 
-    const join = await joinRoom.execute({
+    const roomUser = await joinRoom.execute({
       actor: anotherUser,
       data: {
         room_id: room.id,
       },
     });
 
-    expect(join.user_id).toBe(anotherUser.id);
-    expect(join.room_id).toBe(room.id);
+    expect(roomUser.user_id).toBe(anotherUser.id);
+    expect(roomUser.room_id).toBe(room.id);
   });
 
   it('should not be able to enter a room if the user does not exist', async () => {

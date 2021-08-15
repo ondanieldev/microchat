@@ -2,8 +2,8 @@ import { container } from 'tsyringe';
 
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 import RoomsRepository from '../Infra/TypeORM/Repositories/RoomsRepository';
-import IJoinsRepository from '../Repositories/IJoinsRepository';
-import JoinsRepository from '../Infra/TypeORM/Repositories/JoinsRepository';
+import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
+import RoomsUsersRepository from '../Infra/TypeORM/Repositories/RoomsUsersRepository';
 
 class RoomsContainers {
   public execute(): void {
@@ -12,9 +12,9 @@ class RoomsContainers {
       RoomsRepository,
     );
 
-    container.registerSingleton<IJoinsRepository>(
-      'JoinsRepository',
-      JoinsRepository,
+    container.registerSingleton<IRoomsUsersRepository>(
+      'RoomsUsersRepository',
+      RoomsUsersRepository,
     );
   }
 }

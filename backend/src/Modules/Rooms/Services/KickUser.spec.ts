@@ -5,14 +5,14 @@ import CreateUser from 'Modules/Users/Services/CreateUser';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
 import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
-import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
+import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
 import CreateRoom from './CreateRoom';
 import JoinRoom from './JoinRoom';
 import KickUser from './KickUser';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
-let fakeJoinsRepository: FakeJoinsRepository;
+let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
@@ -23,28 +23,24 @@ describe('KickUser', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
-    fakeJoinsRepository = new FakeJoinsRepository();
+    fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
     fakeHashProvider = new FakeHashProvider();
     createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
     joinRoom = new JoinRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
-      fakeJoinsRepository,
+      fakeRoomsUsersRepository,
     );
-    kickUser = new KickUser(
-      fakeUsersRepository,
-      fakeRoomsRepository,
-      fakeJoinsRepository,
-    );
+    kickUser = new KickUser(fakeRoomsRepository, fakeRoomsUsersRepository);
   });
 
   it('should be able to kick a user out of a room', async () => {
-    const deleteJoin = jest.spyOn(fakeJoinsRepository, 'delete');
+    const deleteJoin = jest.spyOn(fakeRoomsUsersRepository, 'delete');
 
     const user = await createUser.execute({
       nickname: 'John Doe',
@@ -63,7 +59,7 @@ describe('KickUser', () => {
       },
     });
 
-    const join = await joinRoom.execute({
+    const roomUser = await joinRoom.execute({
       actor: anotherUser,
       data: {
         room_id: room.id,
@@ -76,7 +72,7 @@ describe('KickUser', () => {
       user_id: anotherUser.id,
     });
 
-    expect(deleteJoin).toBeCalledWith(join.id);
+    expect(deleteJoin).toBeCalledWith(roomUser.id);
   });
 
   it('should not be able to kick a user out of a room for which you are not a moderator', async () => {

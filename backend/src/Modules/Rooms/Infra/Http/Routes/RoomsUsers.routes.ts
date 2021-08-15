@@ -2,14 +2,14 @@ import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 import AuthMiddleware from 'Shared/Infra/Http/Middlewares/AuthMiddleware';
-import JoinsController from '../Controllers/JoinsController';
+import RoomsUsersController from '../Controllers/RoomsUsersController';
 
-const joinsRoutes = Router();
+const roomsUsersRoutes = Router();
 const authMiddleware = new AuthMiddleware();
-const joinsController = new JoinsController();
+const roomsUsersController = new RoomsUsersController();
 
-joinsRoutes.use('/', authMiddleware.execute);
-joinsRoutes.post(
+roomsUsersRoutes.use('/', authMiddleware.execute);
+roomsUsersRoutes.post(
   '/kick',
   celebrate({
     [Segments.BODY]: {
@@ -17,25 +17,25 @@ joinsRoutes.post(
       user_id: Joi.string().uuid().required(),
     },
   }),
-  joinsController.kick,
+  roomsUsersController.kick,
 );
-joinsRoutes.post(
+roomsUsersRoutes.post(
   '/',
   celebrate({
     [Segments.BODY]: {
       room_id: Joi.string().uuid().required(),
     },
   }),
-  joinsController.join,
+  roomsUsersController.join,
 );
-joinsRoutes.delete(
+roomsUsersRoutes.delete(
   '/:id',
   celebrate({
     [Segments.PARAMS]: {
       room_id: Joi.string().uuid().required(),
     },
   }),
-  joinsController.leave,
+  roomsUsersController.leave,
 );
 
-export default joinsRoutes;
+export default roomsUsersRoutes;
