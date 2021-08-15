@@ -17,7 +17,7 @@ class UsersController {
 
     const user = await createUserSession.execute(body);
 
-    return response.status(200).json(classToClass(user));
+    return response.status(201).json(classToClass(user));
   }
 
   public async delete(
@@ -31,7 +31,7 @@ class UsersController {
 
     await deleteUserSession.execute(user);
 
-    return response.status(200).json();
+    return response.status(204).json();
   }
 }
 

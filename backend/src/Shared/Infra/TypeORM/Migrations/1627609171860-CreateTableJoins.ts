@@ -30,11 +30,6 @@ export default class CreateTableJoins1627609171860
             type: 'uuid',
           },
           {
-            name: 'is_moderator',
-            type: 'boolean',
-            default: false,
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',
