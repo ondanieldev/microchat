@@ -1,13 +1,15 @@
 import 'reflect-metadata';
 
-import AppError from 'Shared/Errors/AppError';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
 import CreateUser from 'Modules/Users/Services/CreateUser';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
+import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
-import CreateRoom from './CreateRoom';
 import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
+import CreateRoom from './CreateRoom';
+import JoinRoom from './JoinRoom';
+import Room from '../Infra/TypeORM/Entities/Room';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
@@ -15,8 +17,9 @@ let fakeJoinsRepository: FakeJoinsRepository;
 let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
+let joinRoom: JoinRoom;
 
-describe('CreateRoom', () => {
+describe('JoinRoom', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
@@ -28,9 +31,43 @@ describe('CreateRoom', () => {
       fakeRoomsRepository,
       fakeJoinsRepository,
     );
+    joinRoom = new JoinRoom(
+      fakeUsersRepository,
+      fakeRoomsRepository,
+      fakeJoinsRepository,
+    );
   });
 
-  it('should be able to create a new room', async () => {
+  it('should be able to join a room', async () => {
+    const user = await createUser.execute({
+      nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const anotherUser = await createUser.execute({
+      nickname: 'Jane Doe',
+      password: 'verysecretpassword',
+    });
+
+    const room = await createRoom.execute({
+      actor: user,
+      data: {
+        name: 'My friends',
+      },
+    });
+
+    const join = await joinRoom.execute({
+      actor: anotherUser,
+      data: {
+        room_id: room.id,
+      },
+    });
+
+    expect(join.user_id).toBe(anotherUser.id);
+    expect(join.room_id).toBe(room.id);
+  });
+
+  it('should not be able to join a room if the user does not exist', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -43,17 +80,31 @@ describe('CreateRoom', () => {
       },
     });
 
-    expect(room).toHaveProperty('id');
-  });
-
-  it('should not be able to create a new room if the moderator does not exist', async () => {
     const invalidUser = new User();
 
     expect(
-      createRoom.execute({
+      joinRoom.execute({
         actor: invalidUser,
         data: {
-          name: 'My friends',
+          room_id: room.id,
+        },
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to join a non-existing room', async () => {
+    const user = await createUser.execute({
+      nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const invalidRoom = new Room();
+
+    expect(
+      joinRoom.execute({
+        actor: user,
+        data: {
+          room_id: invalidRoom.id,
         },
       }),
     ).rejects.toBeInstanceOf(AppError);

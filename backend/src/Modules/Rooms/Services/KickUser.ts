@@ -3,18 +3,17 @@ import { inject, injectable } from 'tsyringe';
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
-import ICreateRoom from '../DTOs/ICreateRoom';
-import IRoomsRepository from '../Repositories/IRoomsRepository';
-import Room from '../Infra/TypeORM/Entities/Room';
 import IJoinsRepository from '../Repositories/IJoinsRepository';
+import IRoomsRepository from '../Repositories/IRoomsRepository';
 
 interface IRequest {
   actor: User;
-  data: Omit<ICreateRoom, 'moderator_id'>;
+  room_id: string;
+  user_id: string;
 }
 
 @injectable()
-class CreateRoom {
+class KickUser {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
@@ -26,26 +25,25 @@ class CreateRoom {
     private joinsRepository: IJoinsRepository,
   ) {}
 
-  public async execute({ actor, data }: IRequest): Promise<Room> {
-    const user = await this.usersRepository.findOne({
-      id: actor.id,
+  public async execute({ actor, room_id, user_id }: IRequest): Promise<void> {
+    const room = await this.roomsRepository.findOne({
+      id: room_id,
+      moderator_id: actor.id,
     });
-    if (!user) {
-      throw new AppError('User not found!', 404);
+    if (!room) {
+      throw new AppError('You are not a moderator of this room!', 403);
     }
 
-    const room = await this.roomsRepository.create({
-      moderator_id: actor.id,
-      ...data,
+    const join = await this.joinsRepository.findOne({
+      room_id,
+      user_id,
     });
+    if (!join) {
+      throw new AppError('This user does not participate of this room!', 404);
+    }
 
-    await this.joinsRepository.create({
-      room_id: room.id,
-      user_id: user.id,
-    });
-
-    return room;
+    await this.joinsRepository.delete(join.id);
   }
 }
 
-export default CreateRoom;
+export default KickUser;

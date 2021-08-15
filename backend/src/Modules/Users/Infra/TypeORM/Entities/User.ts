@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
+import Join from 'Modules/Rooms/Infra/TypeORM/Entities/Join';
 
 @Entity('users')
 class User {
@@ -32,6 +33,9 @@ class User {
 
   @OneToMany(() => Room, room => room.moderator)
   rooms: Room[];
+
+  @OneToMany(() => Join, join => join.user)
+  joins: Join[];
 }
 
 export default User;
