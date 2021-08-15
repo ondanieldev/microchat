@@ -22,10 +22,7 @@ class AuthenticateUser {
       id: data.subject,
     });
     if (!user || user.token !== token) {
-      throw new AppError(
-        'You are not authorized to access this resource!',
-        401,
-      );
+      throw new AppError('Invalid token!', 401);
     }
 
     return user;

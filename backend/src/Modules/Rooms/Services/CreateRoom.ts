@@ -15,10 +15,10 @@ interface IRequest {
 @injectable()
 class CreateRoom {
   constructor(
-    @inject('IRoomsRepository')
+    @inject('RoomsRepository')
     private roomsRepository: IRoomsRepository,
 
-    @inject('IUsersRepository')
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
   ) {}
 

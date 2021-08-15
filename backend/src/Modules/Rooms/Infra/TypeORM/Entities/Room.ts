@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -27,6 +28,7 @@ class Room {
   updated_at: Date;
 
   @ManyToOne(() => User, moderator => moderator.rooms)
+  @JoinColumn({ name: 'moderator_id' })
   moderator?: User;
 }
 

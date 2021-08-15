@@ -1,4 +1,10 @@
-import { EntityRepository, Like, Repository } from 'typeorm';
+import {
+  EntityRepository,
+  getRepository,
+  IsNull,
+  Like,
+  Repository,
+} from 'typeorm';
 
 import IRoomsRepository from 'Modules/Rooms/Repositories/IRoomsRepository';
 import ICreateRoom from 'Modules/Rooms/DTOs/ICreateRoom';
@@ -10,6 +16,10 @@ import Room from '../Entities/Room';
 class RoomsRepository implements IRoomsRepository {
   private ormRepository: Repository<Room>;
 
+  constructor() {
+    this.ormRepository = getRepository(Room);
+  }
+
   public async create(data: ICreateRoom): Promise<Room> {
     const room = this.ormRepository.create(data);
     await this.ormRepository.save(room);
@@ -17,16 +27,12 @@ class RoomsRepository implements IRoomsRepository {
   }
 
   public async find({
-    name,
     limit,
     page,
     ...rest
   }: IFilterRooms): Promise<IPaginatedRooms> {
     const response = await this.ormRepository.findAndCount({
-      where: {
-        name: Like(name),
-        ...rest,
-      },
+      where: rest,
       take: limit,
       skip: ((page || 1) - 1) * (limit || 0),
     });

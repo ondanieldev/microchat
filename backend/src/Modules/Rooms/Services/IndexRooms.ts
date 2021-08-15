@@ -7,7 +7,7 @@ import IPaginatedRooms from '../DTOs/IPaginatedRooms';
 @injectable()
 class IndexRooms {
   constructor(
-    @inject('IRoomsRepository')
+    @inject('RoomsRepository')
     private roomsRepository: IRoomsRepository,
   ) {}
 
