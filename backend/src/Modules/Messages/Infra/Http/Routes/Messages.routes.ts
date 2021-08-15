@@ -19,5 +19,18 @@ messagesRoutes.post(
   }),
   messagesController.create,
 );
+messagesRoutes.get(
+  '/:room_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      room_id: Joi.string().uuid().required(),
+    },
+    [Segments.QUERY]: {
+      limit: Joi.number().min(0).max(100).required(),
+      cursor: Joi.string().uuid(),
+    },
+  }),
+  messagesController.index,
+);
 
 export default messagesRoutes;
