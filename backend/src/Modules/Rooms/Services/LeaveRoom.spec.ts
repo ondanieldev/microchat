@@ -39,7 +39,7 @@ describe('LeaveRoom', () => {
     leaveRoom = new LeaveRoom(fakeJoinsRepository);
   });
 
-  it('should be able to leave the room', async () => {
+  it('should be able to leave a room', async () => {
     const deleteJoin = jest.spyOn(fakeJoinsRepository, 'delete');
 
     const user = await createUser.execute({
@@ -74,7 +74,7 @@ describe('LeaveRoom', () => {
     expect(deleteJoin).toBeCalledWith(join.id);
   });
 
-  it('should not be able to leave a room that the user does not participate', async () => {
+  it('should not be able to leave a room if the user are not participating in it', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',

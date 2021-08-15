@@ -38,7 +38,7 @@ describe('JoinRoom', () => {
     );
   });
 
-  it('should be able to join a room', async () => {
+  it('should be able to enter a room', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -67,7 +67,7 @@ describe('JoinRoom', () => {
     expect(join.room_id).toBe(room.id);
   });
 
-  it('should not be able to join a room if the user does not exist', async () => {
+  it('should not be able to enter a room if the user does not exist', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -92,7 +92,7 @@ describe('JoinRoom', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to join a non-existing room', async () => {
+  it('should not be able to enter a non-existing room', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',

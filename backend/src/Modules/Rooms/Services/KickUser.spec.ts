@@ -3,14 +3,12 @@ import 'reflect-metadata';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
 import CreateUser from 'Modules/Users/Services/CreateUser';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
-import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
 import CreateRoom from './CreateRoom';
 import JoinRoom from './JoinRoom';
 import KickUser from './KickUser';
-import Room from '../Infra/TypeORM/Entities/Room';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
@@ -81,7 +79,7 @@ describe('KickUser', () => {
     expect(deleteJoin).toBeCalledWith(join.id);
   });
 
-  it('should not be able to kick a user from a room that you are not a moderator', async () => {
+  it('should not be able to kick a user out of a room for which you are not a moderator', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -101,7 +99,7 @@ describe('KickUser', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should not be able to kick a user from a room if the user does not particiapte of it', async () => {
+  it('should not be able to kick a user out of a room if the user is not participating in it', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
