@@ -2,6 +2,7 @@ import { EntityRepository, getRepository, Repository } from 'typeorm';
 
 import IJoinsRepository from 'Modules/Rooms/Repositories/IJoinsRepository';
 import ICreateJoin from 'DTOs/ICreateJoin';
+import IFilterJoin from 'Modules/Rooms/DTOs/IFilterJoin';
 import Join from '../Entities/Join';
 
 @EntityRepository(Join)
@@ -16,6 +17,12 @@ class JoinsRepository implements IJoinsRepository {
     const join = this.ormRepository.create(data);
     await this.ormRepository.save(join);
     return join;
+  }
+
+  public async findOne(data: IFilterJoin): Promise<Join | undefined> {
+    return this.ormRepository.findOne({
+      where: data,
+    });
   }
 }
 

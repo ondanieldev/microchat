@@ -3,13 +3,12 @@ import 'reflect-metadata';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
 import CreateUser from 'Modules/Users/Services/CreateUser';
 import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
-import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import AppError from 'Shared/Errors/AppError';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import FakeJoinsRepository from '../Repositories/Fakes/FakeJoinsRepository';
 import CreateRoom from './CreateRoom';
 import JoinRoom from './JoinRoom';
-import Room from '../Infra/TypeORM/Entities/Room';
+import LeaveRoom from './LeaveRoom';
 
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
@@ -18,8 +17,9 @@ let fakeHashProvider: FakeHashProvider;
 let createUser: CreateUser;
 let createRoom: CreateRoom;
 let joinRoom: JoinRoom;
+let leaveRoom: LeaveRoom;
 
-describe('JoinRoom', () => {
+describe('LeaveRoom', () => {
   beforeEach(() => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
@@ -36,9 +36,12 @@ describe('JoinRoom', () => {
       fakeRoomsRepository,
       fakeJoinsRepository,
     );
+    leaveRoom = new LeaveRoom(fakeJoinsRepository);
   });
 
-  it('should be able to join a room', async () => {
+  it('should be able to leave the room', async () => {
+    const deleteJoin = jest.spyOn(fakeJoinsRepository, 'delete');
+
     const user = await createUser.execute({
       nickname: 'John Doe',
       password: 'verysecretpassword',
@@ -63,13 +66,27 @@ describe('JoinRoom', () => {
       },
     });
 
-    expect(join.user_id).toBe(anotherUser.id);
-    expect(join.room_id).toBe(room.id);
+    await leaveRoom.execute({
+      actor: anotherUser,
+      id: join.id,
+    });
+
+    expect(deleteJoin).toBeCalled();
   });
 
-  it('should not be able to join a room if the user does not exist', async () => {
+  it('should not be able to leave a room that the user does not participate', async () => {
     const user = await createUser.execute({
       nickname: 'John Doe',
+      password: 'verysecretpassword',
+    });
+
+    const anotherUser = await createUser.execute({
+      nickname: 'Jane Doe',
+      password: 'verysecretpassword',
+    });
+
+    const userThatDoesNotParticipate = await createUser.execute({
+      nickname: 'Doe Doe',
       password: 'verysecretpassword',
     });
 
@@ -80,32 +97,17 @@ describe('JoinRoom', () => {
       },
     });
 
-    const invalidUser = new User();
-
-    expect(
-      joinRoom.execute({
-        actor: invalidUser,
-        data: {
-          room_id: room.id,
-        },
-      }),
-    ).rejects.toBeInstanceOf(AppError);
-  });
-
-  it('should not be able to join a non-existing room', async () => {
-    const user = await createUser.execute({
-      nickname: 'John Doe',
-      password: 'verysecretpassword',
+    const join = await joinRoom.execute({
+      actor: anotherUser,
+      data: {
+        room_id: room.id,
+      },
     });
 
-    const invalidRoom = new Room();
-
     expect(
-      joinRoom.execute({
-        actor: user,
-        data: {
-          room_id: invalidRoom.id,
-        },
+      leaveRoom.execute({
+        actor: userThatDoesNotParticipate,
+        id: join.id,
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
