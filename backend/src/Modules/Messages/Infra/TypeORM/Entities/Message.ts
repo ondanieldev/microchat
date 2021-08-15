@@ -11,13 +11,16 @@ import {
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 
-@Entity('rooms_users')
-class RoomUser {
+@Entity('messages')
+class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  user_id: string;
+  content: string;
+
+  @Column()
+  user_id?: string;
 
   @Column()
   room_id: string;
@@ -28,13 +31,13 @@ class RoomUser {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToOne(() => User, user => user.participations)
+  @ManyToOne(() => User, user => user.messages)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user?: User;
 
-  @ManyToOne(() => Room, room => room.participations)
+  @ManyToOne(() => Room, room => room.messages)
   @JoinColumn({ name: 'room_id' })
   room: Room;
 }
 
-export default RoomUser;
+export default Message;

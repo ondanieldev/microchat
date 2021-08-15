@@ -9,6 +9,7 @@ import {
 import { Exclude, Expose } from 'class-transformer';
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import RoomUser from 'Modules/Rooms/Infra/TypeORM/Entities/RoomUser';
+import Message from 'Modules/Messages/Infra/TypeORM/Entities/Message';
 
 @Entity('users')
 class User {
@@ -36,7 +37,10 @@ class User {
   rooms: Room[];
 
   @OneToMany(() => RoomUser, roomUser => roomUser.user)
-  joins: RoomUser[];
+  participations: RoomUser[];
+
+  @OneToMany(() => Message, message => message.user)
+  messages: Message[];
 }
 
 export default User;
