@@ -29,13 +29,22 @@ roomsUsersRoutes.post(
   roomsUsersController.join,
 );
 roomsUsersRoutes.delete(
-  '/:id',
+  '/:room_id',
   celebrate({
     [Segments.PARAMS]: {
       room_id: Joi.string().uuid().required(),
     },
   }),
   roomsUsersController.leave,
+);
+roomsUsersRoutes.get(
+  '/:room_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      room_id: Joi.string().uuid().required(),
+    },
+  }),
+  roomsUsersController.index,
 );
 
 export default roomsUsersRoutes;

@@ -28,6 +28,13 @@ class RoomsUsersRepository implements IRoomsUsersRepository {
   public async delete(id: string): Promise<void> {
     await this.ormRepository.delete(id);
   }
+
+  public async find(data: IFilterRoomsUsers): Promise<RoomUser[]> {
+    return this.ormRepository.find({
+      where: data,
+      relations: ['user'],
+    });
+  }
 }
 
 export default RoomsUsersRepository;

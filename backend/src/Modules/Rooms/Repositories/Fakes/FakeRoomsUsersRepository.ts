@@ -31,6 +31,11 @@ class FakeRoomsUsersRepository implements IRoomsUsersRepository {
       this.roomsUsers.splice(index, 1);
     }
   }
+
+  public async find(data: IFilterRoomsUsers): Promise<RoomUser[]> {
+    const filter = new FilterEntities();
+    return this.roomsUsers.filter(roomUser => filter.execute(roomUser, data));
+  }
 }
 
 export default FakeRoomsUsersRepository;
