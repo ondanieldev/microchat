@@ -2,8 +2,6 @@ import 'reflect-metadata';
 
 import AppError from 'Shared/Errors/AppError';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
-import CreateUser from 'Modules/Users/Services/CreateUser';
-import FakeHashProvider from 'Shared/Containers/Providers/HashProvider/Fakes/FakeHashProvider';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import CreateRoom from './CreateRoom';
@@ -12,8 +10,6 @@ import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersReposi
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
-let fakeHashProvider: FakeHashProvider;
-let createUser: CreateUser;
 let createRoom: CreateRoom;
 
 describe('CreateRoom', () => {
@@ -21,8 +17,6 @@ describe('CreateRoom', () => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
     fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
-    fakeHashProvider = new FakeHashProvider();
-    createUser = new CreateUser(fakeUsersRepository, fakeHashProvider);
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
@@ -31,7 +25,7 @@ describe('CreateRoom', () => {
   });
 
   it('should be able to create a new room', async () => {
-    const user = await createUser.execute({
+    const user = await fakeUsersRepository.create({
       nickname: 'John Doe',
       password: 'verysecretpassword',
     });
