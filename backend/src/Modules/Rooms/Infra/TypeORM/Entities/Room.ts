@@ -11,6 +11,7 @@ import {
 
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import RoomUser from 'Modules/Rooms/Infra/TypeORM/Entities/RoomUser';
+import Message from 'Modules/Messages/Infra/TypeORM/Entities/Message';
 
 @Entity('rooms')
 class Room {
@@ -34,7 +35,10 @@ class Room {
   moderator?: User;
 
   @OneToMany(() => RoomUser, roomUser => roomUser.room)
-  joins: RoomUser[];
+  participations: RoomUser[];
+
+  @OneToMany(() => Message, message => message.room)
+  messages: Message[];
 }
 
 export default Room;
