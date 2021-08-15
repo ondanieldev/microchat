@@ -6,7 +6,7 @@ import IJoinsRepository from '../Repositories/IJoinsRepository';
 
 interface IRequest {
   actor: User;
-  id: string;
+  room_id: string;
 }
 
 @injectable()
@@ -16,9 +16,9 @@ class LeaveRoom {
     private joinsRepository: IJoinsRepository,
   ) {}
 
-  public async execute({ actor, id }: IRequest): Promise<void> {
+  public async execute({ actor, room_id }: IRequest): Promise<void> {
     const join = await this.joinsRepository.findOne({
-      id,
+      room_id,
       user_id: actor.id,
     });
     if (!join) {

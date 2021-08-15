@@ -32,7 +32,7 @@ joinsRoutes.delete(
   '/:id',
   celebrate({
     [Segments.PARAMS]: {
-      id: Joi.string().uuid().required(),
+      room_id: Joi.string().uuid().required(),
     },
   }),
   joinsController.leave,

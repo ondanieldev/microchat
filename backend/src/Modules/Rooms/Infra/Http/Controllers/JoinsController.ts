@@ -29,13 +29,13 @@ class RoomsController {
     _: NextFunction,
   ): Promise<Response> {
     const { user } = request;
-    const { id } = request.params;
+    const { room_id } = request.params;
 
     const leaveRoom = container.resolve(LeaveRoom);
 
     await leaveRoom.execute({
       actor: user,
-      id,
+      room_id,
     });
 
     return response.status(204).json();

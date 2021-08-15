@@ -68,7 +68,7 @@ describe('LeaveRoom', () => {
 
     await leaveRoom.execute({
       actor: anotherUser,
-      id: join.id,
+      room_id: room.id,
     });
 
     expect(deleteJoin).toBeCalledWith(join.id);
@@ -97,7 +97,7 @@ describe('LeaveRoom', () => {
       },
     });
 
-    const join = await joinRoom.execute({
+    await joinRoom.execute({
       actor: anotherUser,
       data: {
         room_id: room.id,
@@ -107,7 +107,7 @@ describe('LeaveRoom', () => {
     expect(
       leaveRoom.execute({
         actor: userThatDoesNotParticipate,
-        id: join.id,
+        room_id: room.id,
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
