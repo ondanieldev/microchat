@@ -11,13 +11,14 @@ class MessagesControllers {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { user, body } = request;
+    const { user, body, sockets } = request;
 
     const createMessage = container.resolve(CreateMessage);
 
     const message = await createMessage.execute({
       actor: user,
       data: body,
+      sockets,
     });
 
     return response.status(201).json(message);
