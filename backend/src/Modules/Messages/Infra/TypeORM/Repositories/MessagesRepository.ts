@@ -26,7 +26,6 @@ class MessagesRepository implements IMessagesRepository {
     cursor,
     ...data
   }: IFilterMessages): Promise<IPaginatedMessages> {
-    console.log(cursor);
     const total = await this.ormRepository.count();
     const response = await this.ormRepository.findAndCount({
       where: {
