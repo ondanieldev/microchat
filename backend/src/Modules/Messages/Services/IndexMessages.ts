@@ -1,8 +1,10 @@
 import { injectable, inject } from 'tsyringe';
+import qs from 'qs';
 
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import IRoomsUsersRepository from 'Modules/Rooms/Repositories/IRoomsUsersRepository';
+import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICacheProvider';
 import IMessagesRepository from '../Repositories/IMessagesRepository';
 import IPaginatedMessages from '../DTOs/IPaginatedMessages';
 
@@ -21,6 +23,9 @@ class IndexMessages {
 
     @inject('MessagesRepository')
     private messagesRepository: IMessagesRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -45,11 +50,18 @@ class IndexMessages {
       dateCursor = new Date(message.created_at);
     }
 
-    return this.messagesRepository.find({
-      room_id,
-      limit,
-      cursor: dateCursor,
-    });
+    const cacheKey = `messages:${room_id}:${qs.stringify({ cursor, limit })}`;
+    let data = await this.cacheProvider.get<IPaginatedMessages>(cacheKey);
+    if (!data) {
+      data = await this.messagesRepository.find({
+        room_id,
+        limit,
+        cursor: dateCursor,
+      });
+      this.cacheProvider.set(cacheKey, data);
+    }
+
+    return data;
   }
 }
 
