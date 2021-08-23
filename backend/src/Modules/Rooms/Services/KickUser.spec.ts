@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import AppError from 'Shared/Errors/AppError';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
+import FakeCacheProvider from 'Shared/Containers/Providers/CacheProvider/Fakes/FakeCacheProvider';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
 import KickUser from './KickUser';
@@ -9,6 +10,7 @@ import KickUser from './KickUser';
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let kickUser: KickUser;
 
 describe('KickUser', () => {
@@ -16,11 +18,13 @@ describe('KickUser', () => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
     fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
+    fakeCacheProvider = new FakeCacheProvider();
 
     kickUser = new KickUser(
       fakeRoomsRepository,
       fakeRoomsUsersRepository,
       fakeUsersRepository,
+      fakeCacheProvider,
     );
   });
 
