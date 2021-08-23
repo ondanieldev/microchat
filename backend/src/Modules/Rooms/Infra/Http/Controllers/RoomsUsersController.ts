@@ -6,6 +6,8 @@ import JoinRoom from 'Modules/Rooms/Services/JoinRoom';
 import LeaveRoom from 'Modules/Rooms/Services/LeaveRoom';
 import KickUser from 'Modules/Rooms/Services/KickUser';
 import IndexRoomsUsers from 'Modules/Rooms/Services/IndexRoomsUsers';
+import CreateMessage from 'Modules/Messages/Services/CreateMessage';
+import IMessageType from 'Modules/Messages/DTOs/IMessageType';
 
 class RoomsUsersController {
   public async join(
@@ -13,7 +15,7 @@ class RoomsUsersController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { body, user } = request;
+    const { body, user, sockets } = request;
 
     const joinRoom = container.resolve(JoinRoom);
 
@@ -21,6 +23,21 @@ class RoomsUsersController {
       actor: user,
       data: body,
     });
+
+    const createMessage = container.resolve(CreateMessage);
+    createMessage
+      .execute({
+        actor: user,
+        data: {
+          content: `${user.nickname} has joined the room.`,
+          room_id: body.room_id,
+          type: IMessageType.info,
+        },
+      })
+      .then(message => {
+        sockets.to(body.room_id).emit('message', message);
+      })
+      .catch();
 
     return response.status(201).json(join);
   }
@@ -30,7 +47,7 @@ class RoomsUsersController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { user } = request;
+    const { user, sockets } = request;
     const { room_id } = request.params;
 
     const leaveRoom = container.resolve(LeaveRoom);
@@ -40,6 +57,21 @@ class RoomsUsersController {
       room_id,
     });
 
+    const createMessage = container.resolve(CreateMessage);
+    createMessage
+      .execute({
+        actor: user,
+        data: {
+          content: `${user.nickname} has left the room.`,
+          room_id,
+          type: IMessageType.info,
+        },
+      })
+      .then(message => {
+        sockets.to(room_id).emit('message', message);
+      })
+      .catch();
+
     return response.status(204).json();
   }
 
@@ -48,14 +80,29 @@ class RoomsUsersController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { user, body } = request;
+    const { user, body, sockets } = request;
 
     const kickUser = container.resolve(KickUser);
 
-    await kickUser.execute({
+    const kickedUser = await kickUser.execute({
       actor: user,
       ...body,
     });
+
+    const createMessage = container.resolve(CreateMessage);
+    createMessage
+      .execute({
+        actor: user,
+        data: {
+          content: `${kickedUser.nickname} has been kicked by ${user.nickname}.`,
+          room_id: body.room_id,
+          type: IMessageType.info,
+        },
+      })
+      .then(message => {
+        sockets.to(body.room_id).emit('message', message);
+      })
+      .catch();
 
     return response.status(204).json();
   }
