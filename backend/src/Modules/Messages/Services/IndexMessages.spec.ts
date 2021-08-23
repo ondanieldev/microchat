@@ -6,6 +6,7 @@ import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepos
 import FakeRoomsRepository from 'Modules/Rooms/Repositories/Fakes/FakeRoomsRepository';
 import FakeMessagesRepository from '../Repositories/Fakes/FakeMessagesRepository';
 import IndexMessages from './IndexMessages';
+import IMessageType from '../DTOs/IMessageType';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsRepository: FakeRoomsRepository;
@@ -46,12 +47,14 @@ describe('IndexMessages', () => {
       room_id: room.id,
       user_id: user.id,
       content: 'Hello, everyone!',
+      type: IMessageType.text,
     });
 
     await fakeMessagesRepository.create({
       room_id: room.id,
       user_id: user.id,
       content: 'How is it going?',
+      type: IMessageType.text,
     });
 
     const messages = await indexMessages.execute({
@@ -82,12 +85,14 @@ describe('IndexMessages', () => {
       room_id: room.id,
       user_id: user.id,
       content: 'Hello, everyone!',
+      type: IMessageType.text,
     });
 
     const message = await fakeMessagesRepository.create({
       room_id: room.id,
       user_id: user.id,
       content: 'How is it going?',
+      type: IMessageType.text,
     });
 
     const messages = await indexMessages.execute({

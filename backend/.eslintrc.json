@@ -40,7 +40,8 @@
       {
         "argsIgnorePattern": "_"
       }
-    ]
+    ],
+    "no-shadow": "off"
   },
   "settings": {
     "import/resolver": {
