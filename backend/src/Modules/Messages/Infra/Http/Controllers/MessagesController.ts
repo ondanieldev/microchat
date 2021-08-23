@@ -18,8 +18,9 @@ class MessagesControllers {
     const message = await createMessage.execute({
       actor: user,
       data: body,
-      sockets,
     });
+
+    sockets.to(body.room_id).emit('message', message);
 
     return response.status(201).json(message);
   }
