@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
+import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICacheProvider';
 import ICreateRoom from '../DTOs/ICreateRoom';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 import Room from '../Infra/TypeORM/Entities/Room';
@@ -24,6 +25,9 @@ class CreateRoom {
 
     @inject('RoomsUsersRepository')
     private roomsUsersRepository: IRoomsUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ actor, data }: IRequest): Promise<Room> {
@@ -43,6 +47,8 @@ class CreateRoom {
       room_id: room.id,
       user_id: user.id,
     });
+
+    this.cacheProvider.removeByPrefix('rooms');
 
     return room;
   }

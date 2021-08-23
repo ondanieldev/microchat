@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
+import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICacheProvider';
 import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 
@@ -23,6 +24,9 @@ class KickUser {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ actor, room_id, user_id }: IRequest): Promise<User> {
@@ -64,6 +68,8 @@ class KickUser {
     }
 
     await this.roomsUsersRepository.delete(roomUser.id);
+
+    this.cacheProvider.removeByPrefix(`rooms-users:${room.id}`);
 
     return user;
   }

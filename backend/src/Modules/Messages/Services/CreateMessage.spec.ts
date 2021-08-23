@@ -4,6 +4,7 @@ import AppError from 'Shared/Errors/AppError';
 import FakeRoomsUsersRepository from 'Modules/Rooms/Repositories/Fakes/FakeRoomsUsersRepository';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
 import FakeRoomsRepository from 'Modules/Rooms/Repositories/Fakes/FakeRoomsRepository';
+import FakeCacheProvider from 'Shared/Containers/Providers/CacheProvider/Fakes/FakeCacheProvider';
 import CreateMessage from './CreateMessage';
 import FakeMessagesRepository from '../Repositories/Fakes/FakeMessagesRepository';
 import IMessageType from '../DTOs/IMessageType';
@@ -12,6 +13,7 @@ let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
 let fakeMessagesRepository: FakeMessagesRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let createMessage: CreateMessage;
 
 describe('CreateMessage', () => {
@@ -20,10 +22,12 @@ describe('CreateMessage', () => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
     fakeMessagesRepository = new FakeMessagesRepository();
+    fakeCacheProvider = new FakeCacheProvider();
 
     createMessage = new CreateMessage(
       fakeRoomsUsersRepository,
       fakeMessagesRepository,
+      fakeCacheProvider,
     );
   });
 

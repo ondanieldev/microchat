@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import AppError from 'Shared/Errors/AppError';
 import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepository';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
+import FakeCacheProvider from 'Shared/Containers/Providers/CacheProvider/Fakes/FakeCacheProvider';
 import FakeRoomsRepository from '../Repositories/Fakes/FakeRoomsRepository';
 import CreateRoom from './CreateRoom';
 import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersRepository';
@@ -10,6 +11,7 @@ import FakeRoomsUsersRepository from '../Repositories/Fakes/FakeRoomsUsersReposi
 let fakeRoomsRepository: FakeRoomsRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsUsersRepository: FakeRoomsUsersRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let createRoom: CreateRoom;
 
 describe('CreateRoom', () => {
@@ -17,10 +19,13 @@ describe('CreateRoom', () => {
     fakeRoomsRepository = new FakeRoomsRepository();
     fakeUsersRepository = new FakeUsersRepository();
     fakeRoomsUsersRepository = new FakeRoomsUsersRepository();
+    fakeCacheProvider = new FakeCacheProvider();
+
     createRoom = new CreateRoom(
       fakeUsersRepository,
       fakeRoomsRepository,
       fakeRoomsUsersRepository,
+      fakeCacheProvider,
     );
   });
 
