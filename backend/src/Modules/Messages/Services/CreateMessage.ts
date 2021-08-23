@@ -33,12 +33,12 @@ class CreateMessage {
       throw new AppError('You are not participating of this room', 403);
     }
 
-    const message = this.messagesRepository.create({
+    const message = await this.messagesRepository.create({
       user_id: actor.id,
       ...data,
     });
 
-    sockets.emit('message', message);
+    sockets.to(data.room_id).emit('message', message);
 
     return message;
   }
