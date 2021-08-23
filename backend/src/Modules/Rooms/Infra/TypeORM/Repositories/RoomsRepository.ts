@@ -30,6 +30,9 @@ class RoomsRepository implements IRoomsRepository {
       where: rest,
       take: limit,
       skip: ((page || 1) - 1) * (limit || 0),
+      order: {
+        created_at: 'DESC',
+      },
     });
 
     return {

@@ -34,6 +34,9 @@ class RoomsUsersRepository implements IRoomsUsersRepository {
     return this.ormRepository.find({
       where: data,
       relations: ['user'],
+      order: {
+        created_at: 'DESC',
+      },
     });
   }
 }
