@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
+import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
 import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 
@@ -19,9 +20,12 @@ class KickUser {
 
     @inject('RoomsUsersRepository')
     private roomsUsersRepository: IRoomsUsersRepository,
+
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({ actor, room_id, user_id }: IRequest): Promise<void> {
+  public async execute({ actor, room_id, user_id }: IRequest): Promise<User> {
     if (actor.id === user_id) {
       throw new AppError(
         'You cannot kick yourself! If you want to leave the room, use the "leave room service" instead.',
@@ -44,6 +48,13 @@ class KickUser {
       throw new AppError('You are not participating of this room!', 403);
     }
 
+    const user = await this.usersRepository.findOne({
+      id: user_id,
+    });
+    if (!user) {
+      throw new AppError('This user does not exist!', 404);
+    }
+
     const roomUser = await this.roomsUsersRepository.findOne({
       room_id,
       user_id,
@@ -53,6 +64,8 @@ class KickUser {
     }
 
     await this.roomsUsersRepository.delete(roomUser.id);
+
+    return user;
   }
 }
 
