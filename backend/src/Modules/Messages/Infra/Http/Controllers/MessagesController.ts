@@ -11,7 +11,7 @@ class MessagesControllers {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { user, body } = request;
+    const { user, body, sockets } = request;
 
     const createMessage = container.resolve(CreateMessage);
 
@@ -19,6 +19,8 @@ class MessagesControllers {
       actor: user,
       data: body,
     });
+
+    sockets.to(body.room_id).emit('message', message);
 
     return response.status(201).json(message);
   }
