@@ -6,6 +6,7 @@ import FakeUsersRepository from 'Modules/Users/Repositories/Fakes/FakeUsersRepos
 import FakeRoomsRepository from 'Modules/Rooms/Repositories/Fakes/FakeRoomsRepository';
 import CreateMessage from './CreateMessage';
 import FakeMessagesRepository from '../Repositories/Fakes/FakeMessagesRepository';
+import IMessageType from '../DTOs/IMessageType';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeRoomsRepository: FakeRoomsRepository;
@@ -47,6 +48,7 @@ describe('CreateMessage', () => {
       data: {
         content: 'Hello, everyone!',
         room_id: room.id,
+        type: IMessageType.text,
       },
     });
 
@@ -70,6 +72,7 @@ describe('CreateMessage', () => {
         data: {
           content: 'I cannot send this message!',
           room_id: room.id,
+          type: IMessageType.text,
         },
       }),
     ).rejects.toBeInstanceOf(AppError);

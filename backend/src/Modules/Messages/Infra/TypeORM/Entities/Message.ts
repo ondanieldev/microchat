@@ -10,6 +10,10 @@ import {
 
 import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
+import IMessageType from 'Modules/Messages/DTOs/IMessageType';
+import EnumToArray from 'Shared/Helpers/EnumToArray';
+
+const enumToArray = new EnumToArray();
 
 @Entity('messages')
 class Message {
@@ -24,6 +28,9 @@ class Message {
 
   @Column()
   room_id: string;
+
+  @Column({ enum: enumToArray.execute(IMessageType) })
+  type: IMessageType;
 
   @CreateDateColumn()
   created_at: Date;

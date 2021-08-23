@@ -3,6 +3,8 @@ import { container } from 'tsyringe';
 
 import CreateRoom from 'Modules/Rooms/Services/CreateRoom';
 import IndexRooms from 'Modules/Rooms/Services/IndexRooms';
+import CreateMessage from 'Modules/Messages/Services/CreateMessage';
+import IMessageType from 'Modules/Messages/DTOs/IMessageType';
 
 class RoomsController {
   public async create(
@@ -10,7 +12,7 @@ class RoomsController {
     response: Response,
     _: NextFunction,
   ): Promise<Response> {
-    const { body, user } = request;
+    const { body, user, sockets } = request;
 
     const createRoom = container.resolve(CreateRoom);
 
@@ -18,6 +20,21 @@ class RoomsController {
       actor: user,
       data: body,
     });
+
+    const createMessage = container.resolve(CreateMessage);
+    createMessage
+      .execute({
+        actor: user,
+        data: {
+          content: `Room created by ${user.nickname}.`,
+          room_id: room.id,
+          type: IMessageType.info,
+        },
+      })
+      .then(message => {
+        sockets.to(room.id).emit('message', message);
+      })
+      .catch();
 
     return response.status(201).json(room);
   }

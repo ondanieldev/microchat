@@ -4,6 +4,7 @@ import { classToClass } from 'class-transformer';
 
 import CreateMessage from 'Modules/Messages/Services/CreateMessage';
 import IndexMessages from 'Modules/Messages/Services/IndexMessages';
+import IMessageType from 'Modules/Messages/DTOs/IMessageType';
 
 class MessagesControllers {
   public async create(
@@ -17,7 +18,10 @@ class MessagesControllers {
 
     const message = await createMessage.execute({
       actor: user,
-      data: body,
+      data: {
+        ...body,
+        type: IMessageType.text,
+      },
     });
 
     sockets.to(body.room_id).emit('message', message);
