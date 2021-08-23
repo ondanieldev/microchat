@@ -42,7 +42,6 @@ class IndexMessages {
       id: cursor,
     });
     if (message) {
-      console.log(message);
       dateCursor = new Date(message.created_at);
     }
 
