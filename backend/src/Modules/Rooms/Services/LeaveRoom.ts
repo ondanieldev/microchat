@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
+import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICacheProvider';
 import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 
 interface IRequest {
@@ -14,6 +15,9 @@ class LeaveRoom {
   constructor(
     @inject('RoomsUsersRepository')
     private roomsUsersRepository: IRoomsUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({ actor, room_id }: IRequest): Promise<void> {
@@ -24,6 +28,8 @@ class LeaveRoom {
     if (!roomUser) {
       throw new AppError('You are not a participant of this room!', 403);
     }
+
+    this.cacheProvider.removeByPrefix(`rooms-users:${room_id}`);
 
     await this.roomsUsersRepository.delete(roomUser.id);
   }

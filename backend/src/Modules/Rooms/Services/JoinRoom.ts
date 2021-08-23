@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import AppError from 'Shared/Errors/AppError';
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import IUsersRepository from 'Modules/Users/Repositories/IUsersRepository';
+import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICacheProvider';
 import IRoomsRepository from '../Repositories/IRoomsRepository';
 import IRoomsUsersRepository from '../Repositories/IRoomsUsersRepository';
 import RoomUser from '../Infra/TypeORM/Entities/RoomUser';
@@ -24,6 +25,9 @@ class JoinRoom {
 
     @inject('RoomsUsersRepository')
     private roomsUsersRepository: IRoomsUsersRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -52,11 +56,15 @@ class JoinRoom {
       throw new AppError('You are already a participant of this room!', 403);
     }
 
-    return this.roomsUsersRepository.create({
+    const create = await this.roomsUsersRepository.create({
       room_id: room.id,
       user_id: user.id,
       ...rest,
     });
+
+    this.cacheProvider.removeByPrefix(`rooms-users:${room.id}`);
+
+    return create;
   }
 }
 
