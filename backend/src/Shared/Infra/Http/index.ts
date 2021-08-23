@@ -13,6 +13,7 @@ import TypeORM from '../TypeORM';
 import WebSocket from '../WebSocket';
 import Containers from '../../Containers';
 import ErrorsMiddleware from './Middlewares/ErrorsMiddleware';
+import RateLimitMiddleware from './Middlewares/RateLimitMiddleware';
 
 configure(
   `src/Config/log4js-${
@@ -28,10 +29,12 @@ const typeORM = new TypeORM();
 const webSocket = new WebSocket();
 const containers = new Containers();
 const errorsMiddleware = new ErrorsMiddleware();
+const rateLimitMiddleware = new RateLimitMiddleware();
 
 typeORM.execute().then(() => {
   containers.execute();
   app.use(webSocket.execute(server));
+  app.use(rateLimitMiddleware.execute());
   app.use(cors());
   app.use(express.json());
   app.use(routes);
