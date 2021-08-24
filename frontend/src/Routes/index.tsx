@@ -6,9 +6,9 @@ import Home from 'Pages/Home';
 const Routes: React.FC = () => {
   return (
     <Switch>
-      <Route path="/" exact component={Home} />
+      <Route path="/home" exact component={Home} />
 
-      <Redirect from="*" to="/" />
+      <Redirect from="*" to="/home" />
     </Switch>
   );
 };
