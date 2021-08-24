@@ -8,6 +8,7 @@ const HomeCard: React.FC = ({ children }) => {
 
   return (
     <Card
+      w="100%"
       border="5px solid"
       borderTopColor={orange}
       borderLeftColor={orange}
