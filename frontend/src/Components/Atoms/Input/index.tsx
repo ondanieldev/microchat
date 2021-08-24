@@ -82,7 +82,7 @@ const Input: React.FC<IProps> = ({
             )}
 
             {error && (
-              <Box mr="20px" ml="10px">
+              <Box mr="25px" ml="10px">
                 <InputError error={error} />
               </Box>
             )}

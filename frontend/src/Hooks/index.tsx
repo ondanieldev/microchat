@@ -2,8 +2,9 @@ import React from 'react';
 
 import ErrorsProvider from './errors';
 import ColorsProvider from './colors';
+import AuthProvider from './auth';
 
-const providers = [ErrorsProvider, ColorsProvider];
+const providers = [ErrorsProvider, ColorsProvider, AuthProvider];
 
 const CombineProviders: React.FC = ({ children }) => {
   return (
