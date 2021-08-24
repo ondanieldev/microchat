@@ -1,8 +1,8 @@
 import React from 'react';
 import { VStack } from '@chakra-ui/react';
 
-import RoomsSearchBar from 'Components/Molecules/RoomsSearchBar';
 import Card from 'Components/Atoms/Card';
+import RoomsSearchBar from 'Components/Molecules/RoomsSearchBar';
 import RoomsList from '../RoomsList';
 
 const RoomsBar: React.FC = () => {
