@@ -1,3 +1,5 @@
+import IUser from './IUser';
+
 interface IMessage {
   id: string;
   content: string;
@@ -6,6 +8,8 @@ interface IMessage {
   type: string;
   created_at: Date;
   updated_at: Date;
+
+  user?: IUser;
 }
 
 export default IMessage;

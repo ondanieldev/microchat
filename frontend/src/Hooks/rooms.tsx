@@ -8,22 +8,26 @@ import React, {
 
 import api from 'Services/api';
 import IRoom from 'Types/Entities/IRoom';
+import ISetState from 'Types/Standards/ISetState';
 import { useErrors } from './errors';
 
 interface IRoomsContext {
   userRooms: IRoom[];
   searchedUserRooms: IRoom[];
+  currentRoom: IRoom | null;
+  setCurrentRoom: ISetState<IRoom | null>;
   indexUserRooms(): Promise<void>;
   searchUserRooms(name: string): void;
 }
 
 const RoomsContext = createContext<IRoomsContext>({} as IRoomsContext);
 
-const RooomsProvider: React.FC = ({ children }) => {
+const RoomsProvider: React.FC = ({ children }) => {
   const { handleErrors } = useErrors();
 
   const [userRooms, setUserRooms] = useState<IRoom[]>([]);
   const [searchedUserRooms, setSearchedUserRooms] = useState<IRoom[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<IRoom | null>(null);
 
   const indexUserRooms = useCallback(async () => {
     try {
@@ -52,6 +56,8 @@ const RooomsProvider: React.FC = ({ children }) => {
   return (
     <RoomsContext.Provider
       value={{
+        setCurrentRoom,
+        currentRoom,
         userRooms,
         indexUserRooms,
         searchUserRooms,
@@ -71,4 +77,4 @@ export const useRooms = (): IRoomsContext => {
   return context;
 };
 
-export default RooomsProvider;
+export default RoomsProvider;
