@@ -9,7 +9,7 @@ const Card: React.FC<BoxProps> = ({ children, ...rest }) => {
       p="20px"
       backgroundColor={cardColor}
       boxShadow="0 5px 5px 0 rgb(35 40 45 / 10%)"
-      borderRadius="10px"
+      borderRadius="5px"
       {...rest}
     >
       {children}
