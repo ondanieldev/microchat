@@ -89,13 +89,14 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [history]);
 
   useEffect(() => {
-    api.get('/users/me').catch(() => {
-      signOut();
-    });
-    const savedUser = localStorage.getItem(LocalStorageConfig.userKey);
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    api
+      .get('/users/me')
+      .then(response => {
+        setUser(response.data);
+      })
+      .catch(() => {
+        signOut();
+      });
   }, [signOut]);
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Avatar,
   HStack,
@@ -7,11 +7,27 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import IRoom from 'Types/Entities/IRoom';
 import { useColors } from 'Hooks/colors';
 
-const Room: React.FC = () => {
+import { useAuth } from 'Hooks/auth';
+
+interface IProps {
+  data: IRoom;
+}
+
+const Room: React.FC<IProps> = ({ data }) => {
+  const { user } = useAuth();
   const { orange, purple } = useColors();
   const hoverBackgroundColor = useColorModeValue('gray.200', 'gray.600');
+
+  const avatarColor = useMemo(
+    () =>
+      data.last_message && data.last_message.user_id === user?.id
+        ? orange
+        : purple,
+    [user, data, orange, purple],
+  );
 
   return (
     <HStack
@@ -24,14 +40,16 @@ const Room: React.FC = () => {
       }}
       cursor="pointer"
     >
-      <Avatar name="room" backgroundColor={orange} />
+      <Avatar name={data.name} backgroundColor={avatarColor} />
       <VStack spacing="5px" alignItems="flex-start">
         <Text lineHeight="20px" fontWeight="bold" maxW="200px" isTruncated>
-          room name
+          {data.name}
         </Text>
-        <Text lineHeight="20px" maxW="200px" isTruncated>
-          room last message
-        </Text>
+        {data.last_message && (
+          <Text lineHeight="20px" maxW="200px" isTruncated>
+            {data.last_message.content}
+          </Text>
+        )}
       </VStack>
     </HStack>
   );
