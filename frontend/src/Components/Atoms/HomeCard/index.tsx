@@ -1,5 +1,5 @@
-import { useColors } from 'Hooks/colors';
 import React from 'react';
+import { useColors } from 'Hooks/colors';
 
 import Card from '../Card';
 
