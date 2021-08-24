@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { Icon, useColorMode } from '@chakra-ui/react';
 import { FiMoon, FiSun } from 'react-icons/fi';
+import { Icon, useColorMode } from '@chakra-ui/react';
 
 const ColorIcon: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();

@@ -12,6 +12,18 @@ const theme = extendTheme({
         minHeight: '100% ',
       },
       '*': {
+        '::-webkit-scrollbar': {
+          width: '5px',
+        },
+        '::-webkit-scrollbar-thumb': {
+          background: props.colorMode === 'dark' ? 'white' : 'gray.700',
+          borderRadius: '5px',
+          border: 'none',
+        },
+        '::-webkit-scrollbar-track': {
+          background: props.colorMode === 'dark' ? 'gray.700' : 'white',
+          boxShadow: 'none',
+        },
         _focus: {
           boxShadow: 'none !important',
         },

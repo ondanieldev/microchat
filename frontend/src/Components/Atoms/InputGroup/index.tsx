@@ -1,8 +1,12 @@
 import React from 'react';
-import { ContainerProps, HStack } from '@chakra-ui/react';
+import { HStack, StackProps } from '@chakra-ui/react';
 
-const InputGroup: React.FC<ContainerProps> = ({ children }) => {
-  return <HStack spacing="20px">{children}</HStack>;
+const InputGroup: React.FC<StackProps> = ({ children, ...rest }) => {
+  return (
+    <HStack spacing="20px" {...rest}>
+      {children}
+    </HStack>
+  );
 };
 
 export default InputGroup;

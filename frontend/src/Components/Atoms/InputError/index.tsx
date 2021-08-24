@@ -1,6 +1,6 @@
 import React from 'react';
-import { Icon, Tooltip } from '@chakra-ui/react';
 import { FiAlertCircle } from 'react-icons/fi';
+import { Icon, Tooltip } from '@chakra-ui/react';
 
 interface IProps {
   error: string;
