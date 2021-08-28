@@ -37,6 +37,7 @@ roomsUsersRoutes.delete(
   }),
   roomsUsersController.leave,
 );
+roomsUsersRoutes.get('/me', roomsUsersController.indexUserRooms);
 roomsUsersRoutes.get(
   '/:room_id',
   celebrate({

@@ -60,7 +60,7 @@ export const ErrorsProvider: React.FC = ({ children }) => {
         }
         toast({
           title,
-          description: message || e.message || e,
+          description: message || e.error || e,
           status: 'error',
           duration: 5000,
           isClosable: true,

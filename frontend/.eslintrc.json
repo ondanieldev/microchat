@@ -51,7 +51,10 @@
     "react/prop-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "react/no-array-index-key": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "camelcase": "off",
+    "no-empty": "off",
+    "no-param-reassign": "off"
   },
   "settings": {
     "import/resolver": {

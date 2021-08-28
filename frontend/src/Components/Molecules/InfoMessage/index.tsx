@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Text, useColorModeValue } from '@chakra-ui/react';
 
-import { useColors } from 'Hooks/colors';
+import IMessage from 'Types/Entities/IMessage';
+import formatDate from 'Helpers/formatDate';
 
-const InfoMessage: React.FC = () => {
-  const { orange, purple } = useColors();
+interface IProps {
+  data: IMessage;
+}
 
+const InfoMessage: React.FC<IProps> = ({ data }) => {
   const backgroundColor = useColorModeValue('white', 'gray.700');
   const timeColor = useColorModeValue('gray.500', 'gray.400');
+
+  const time = useMemo(() => formatDate(data.created_at), [data]);
 
   return (
     <Box
@@ -18,9 +23,7 @@ const InfoMessage: React.FC = () => {
       maxW="500px"
       alignSelf="center"
     >
-      <Text>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores m
-      </Text>
+      <Text>{data.content}</Text>
       <Text
         mt="10px"
         lineHeight="0px"
@@ -29,7 +32,7 @@ const InfoMessage: React.FC = () => {
         fontSize="sm"
         color={timeColor}
       >
-        09:56 PM
+        {time}
       </Text>
     </Box>
   );

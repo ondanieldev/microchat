@@ -57,6 +57,9 @@ class MessagesRepository implements IMessagesRepository {
   public async findOne(data: IFilterMessage): Promise<Message | undefined> {
     return this.ormRepository.findOne({
       where: data,
+      order: {
+        created_at: 'DESC',
+      },
     });
   }
 }
