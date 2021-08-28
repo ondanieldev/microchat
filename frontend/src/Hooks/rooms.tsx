@@ -9,6 +9,9 @@ import React, {
 import api from 'Services/api';
 import IRoom from 'Types/Entities/IRoom';
 import ISetState from 'Types/Standards/ISetState';
+import ICreateRoom from 'Types/DTOs/ICreateRoom';
+import CreateRoomSchema from 'Schemas/CreateRoomSchema';
+import IDefaultRequest from 'Types/Standards/IDefaultRequest';
 import { useErrors } from './errors';
 
 interface IRoomsContext {
@@ -18,6 +21,7 @@ interface IRoomsContext {
   setCurrentRoom: ISetState<IRoom | null>;
   indexUserRooms(): Promise<void>;
   searchUserRooms(name: string): void;
+  createRoom(data: ICreateRoom & IDefaultRequest): Promise<void>;
 }
 
 const RoomsContext = createContext<IRoomsContext>({} as IRoomsContext);
@@ -49,6 +53,21 @@ const RoomsProvider: React.FC = ({ children }) => {
     [userRooms],
   );
 
+  const createRoom = useCallback(
+    async ({ formRef, ...data }: ICreateRoom & IDefaultRequest) => {
+      try {
+        formRef.current?.setErrors({});
+        await CreateRoomSchema.validate(data, {
+          abortEarly: false,
+        });
+        await api.post('/rooms', data);
+      } catch (err) {
+        handleErrors('Error when trying to create room', err, formRef);
+      }
+    },
+    [handleErrors],
+  );
+
   useEffect(() => {
     setSearchedUserRooms(userRooms);
   }, [userRooms]);
@@ -56,6 +75,7 @@ const RoomsProvider: React.FC = ({ children }) => {
   return (
     <RoomsContext.Provider
       value={{
+        createRoom,
         setCurrentRoom,
         currentRoom,
         userRooms,

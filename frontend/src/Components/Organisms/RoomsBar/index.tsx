@@ -4,14 +4,17 @@ import { VStack } from '@chakra-ui/react';
 import Card from 'Components/Atoms/Card';
 import RoomsSearchBar from 'Components/Molecules/RoomsSearchBar';
 import RoomsList from '../RoomsList';
+import RoomsTools from '../RoomsTools';
 
 const RoomsBar: React.FC = () => {
   return (
     <Card borderEndRadius="0px" maxW="300px" w="100%" h="100%" p="0px">
-      <VStack spacing="20px">
+      <VStack spacing="20px" h="100%">
         <RoomsSearchBar />
 
         <RoomsList />
+
+        <RoomsTools />
       </VStack>
     </Card>
   );
