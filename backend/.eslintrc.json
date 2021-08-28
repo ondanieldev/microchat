@@ -41,7 +41,9 @@
         "argsIgnorePattern": "_"
       }
     ],
-    "no-shadow": "off"
+    "no-shadow": "off",
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off"
   },
   "settings": {
     "import/resolver": {
