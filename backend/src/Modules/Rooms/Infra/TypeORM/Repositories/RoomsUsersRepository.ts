@@ -22,7 +22,7 @@ class RoomsUsersRepository implements IRoomsUsersRepository {
   public async findOne(data: IFilterRoomsUsers): Promise<RoomUser | undefined> {
     return this.ormRepository.findOne({
       where: data,
-      relations: ['room'],
+      relations: ['room', 'user'],
     });
   }
 
@@ -33,7 +33,7 @@ class RoomsUsersRepository implements IRoomsUsersRepository {
   public async find(data: IFilterRoomsUsers): Promise<RoomUser[]> {
     return this.ormRepository.find({
       where: data,
-      relations: ['user'],
+      relations: ['user', 'room'],
       order: {
         created_at: 'DESC',
       },

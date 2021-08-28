@@ -8,6 +8,7 @@ import KickUser from 'Modules/Rooms/Services/KickUser';
 import IndexRoomsUsers from 'Modules/Rooms/Services/IndexRoomsUsers';
 import CreateMessage from 'Modules/Messages/Services/CreateMessage';
 import IMessageType from 'Modules/Messages/DTOs/IMessageType';
+import IndexUserRooms from 'Modules/Rooms/Services/IndexUserRooms';
 
 class RoomsUsersController {
   public async join(
@@ -123,6 +124,20 @@ class RoomsUsersController {
     });
 
     return response.status(200).json(classToClass(users));
+  }
+
+  public async indexUserRooms(
+    request: Request,
+    response: Response,
+    _: NextFunction,
+  ): Promise<Response> {
+    const { user } = request;
+
+    const indexUserRooms = container.resolve(IndexUserRooms);
+
+    const rooms = await indexUserRooms.execute(user);
+
+    return response.status(200).json(rooms);
   }
 }
 
