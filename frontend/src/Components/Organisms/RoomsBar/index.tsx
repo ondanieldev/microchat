@@ -3,7 +3,7 @@ import { VStack } from '@chakra-ui/react';
 
 import Card from 'Components/Atoms/Card';
 import RoomsSearchBar from 'Components/Molecules/RoomsSearchBar';
-import RoomsList from '../RoomsList';
+import UserRoomsList from '../UserRoomsList';
 import RoomsTools from '../RoomsTools';
 
 const RoomsBar: React.FC = () => {
@@ -12,7 +12,7 @@ const RoomsBar: React.FC = () => {
       <VStack spacing="20px" h="100%">
         <RoomsSearchBar />
 
-        <RoomsList />
+        <UserRoomsList />
 
         <RoomsTools />
       </VStack>

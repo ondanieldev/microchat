@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import {
   Avatar,
+  Button,
   HStack,
   Text,
   useColorModeValue,
@@ -16,9 +17,10 @@ import { useRooms } from 'Hooks/rooms';
 
 interface IProps {
   data: IRoom;
+  isUserRoom?: boolean;
 }
 
-const Room: React.FC<IProps> = ({ data }) => {
+const Room: React.FC<IProps> = ({ data, isUserRoom }) => {
   const { user } = useAuth();
   const { setCurrentRoom } = useRooms();
   const { orange, purple } = useColors();
@@ -33,23 +35,34 @@ const Room: React.FC<IProps> = ({ data }) => {
   );
 
   const handleSelectRoom = useCallback(() => {
+    if (!isUserRoom) {
+      return;
+    }
     setCurrentRoom(data);
-  }, [setCurrentRoom, data]);
+  }, [setCurrentRoom, data, isUserRoom]);
+
+  const cursor = useMemo(
+    () => (isUserRoom ? 'pointer' : 'inherit'),
+    [isUserRoom],
+  );
+  const hover = useMemo(
+    () => (isUserRoom ? { backgroundColor: hoverBackgroundColor } : {}),
+    [isUserRoom, hoverBackgroundColor],
+  );
+  const px = useMemo(() => (isUserRoom ? '20px' : '0px'), [isUserRoom]);
 
   return (
     <HStack
       py="10px"
       w="100%"
       alignItems="center"
-      px="20px"
-      _hover={{
-        backgroundColor: hoverBackgroundColor,
-      }}
-      cursor="pointer"
+      px={px}
+      _hover={hover}
+      cursor={cursor}
       onClick={handleSelectRoom}
     >
       <Avatar name={data.name} backgroundColor={avatarColor} />
-      <VStack spacing="5px" alignItems="flex-start">
+      <VStack spacing="5px" alignItems="flex-start" flex="1">
         <Text lineHeight="20px" fontWeight="bold" maxW="200px" isTruncated>
           {data.name}
         </Text>
@@ -59,6 +72,7 @@ const Room: React.FC<IProps> = ({ data }) => {
           </Text>
         )}
       </VStack>
+      {!isUserRoom && <Button colorScheme="purple">join</Button>}
     </HStack>
   );
 };

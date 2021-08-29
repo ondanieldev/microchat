@@ -21,8 +21,12 @@ const MessagesList: React.FC = () => {
       {roomMessages &&
         roomMessages.entities.map(message => (
           <>
-            {message.type === 'text' && <Message data={message} />}
-            {message.type === 'info' && <InfoMessage data={message} />}
+            {message.type === 'text' && (
+              <Message key={message.id} data={message} />
+            )}
+            {message.type === 'info' && (
+              <InfoMessage key={message.id} data={message} />
+            )}
           </>
         ))}
     </VStack>

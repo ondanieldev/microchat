@@ -9,9 +9,11 @@ import React, {
 import api from 'Services/api';
 import IRoom from 'Types/Entities/IRoom';
 import ISetState from 'Types/Standards/ISetState';
-import ICreateRoom from 'Types/DTOs/ICreateRoom';
-import CreateRoomSchema from 'Schemas/CreateRoomSchema';
 import IDefaultRequest from 'Types/Standards/IDefaultRequest';
+import IOffsetPaginated from 'Types/Standards/IOffsetPaginated';
+import ICreateRoom from 'Types/DTOs/ICreateRoom';
+import IFIlterRooms from 'Types/DTOs/IFilterRooms';
+import CreateRoomSchema from 'Schemas/CreateRoomSchema';
 import { useErrors } from './errors';
 
 interface IRoomsContext {
@@ -19,17 +21,23 @@ interface IRoomsContext {
   searchedUserRooms: IRoom[];
   currentRoom: IRoom | null;
   setCurrentRoom: ISetState<IRoom | null>;
+  rooms: IOffsetPaginated<IRoom> | null;
+  roomsLimit: number;
   indexUserRooms(): Promise<void>;
   searchUserRooms(name: string): void;
   createRoom(data: ICreateRoom & IDefaultRequest): Promise<void>;
+  indexRooms(data: IFIlterRooms): Promise<void>;
 }
 
 const RoomsContext = createContext<IRoomsContext>({} as IRoomsContext);
 
 const RoomsProvider: React.FC = ({ children }) => {
+  const roomsLimit = 5;
+
   const { handleErrors } = useErrors();
 
   const [userRooms, setUserRooms] = useState<IRoom[]>([]);
+  const [rooms, setRooms] = useState<IOffsetPaginated<IRoom> | null>(null);
   const [searchedUserRooms, setSearchedUserRooms] = useState<IRoom[]>([]);
   const [currentRoom, setCurrentRoom] = useState<IRoom | null>(null);
 
@@ -68,6 +76,23 @@ const RoomsProvider: React.FC = ({ children }) => {
     [handleErrors],
   );
 
+  const indexRooms = useCallback(
+    async (data: IFIlterRooms) => {
+      try {
+        const response = await api.get('/rooms', {
+          params: {
+            limit: roomsLimit,
+            ...data,
+          },
+        });
+        setRooms(response.data);
+      } catch (err) {
+        handleErrors('Error when trying to index rooms', err);
+      }
+    },
+    [handleErrors],
+  );
+
   useEffect(() => {
     setSearchedUserRooms(userRooms);
   }, [userRooms]);
@@ -75,13 +100,16 @@ const RoomsProvider: React.FC = ({ children }) => {
   return (
     <RoomsContext.Provider
       value={{
-        createRoom,
         setCurrentRoom,
         currentRoom,
         userRooms,
         indexUserRooms,
         searchUserRooms,
         searchedUserRooms,
+        createRoom,
+        indexRooms,
+        rooms,
+        roomsLimit,
       }}
     >
       {children}
