@@ -5,7 +5,7 @@ import Card from 'Components/Atoms/Card';
 import { useRooms } from 'Hooks/rooms';
 import MessagesList from '../MessagesList';
 import SendMessageForm from '../SendMessageForm';
-import RoomUsers from '../RoomUsers';
+import ChatBoxActionButtons from '../ChatBoxActionButtons';
 
 const ChatBox: React.FC = () => {
   const { currentRoom } = useRooms();
@@ -23,7 +23,7 @@ const ChatBox: React.FC = () => {
     >
       {currentRoom && (
         <Flex direction="column" h="100%" position="relative">
-          <RoomUsers />
+          <ChatBoxActionButtons />
 
           <MessagesList />
 

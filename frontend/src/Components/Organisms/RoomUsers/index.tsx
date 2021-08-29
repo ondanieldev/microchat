@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Box,
   Button,
   IconButton,
   Modal,
@@ -16,11 +15,11 @@ import { FiUsers } from 'react-icons/fi';
 
 import UsersList from '../UsersList';
 
-const RoomParticipants: React.FC = () => {
+const RoomUsers: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box position="absolute" right="0">
+    <>
       <IconButton
         onClick={onOpen}
         aria-label="view participants"
@@ -45,8 +44,8 @@ const RoomParticipants: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </>
   );
 };
 
-export default RoomParticipants;
+export default RoomUsers;

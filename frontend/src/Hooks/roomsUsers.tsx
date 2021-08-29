@@ -9,6 +9,7 @@ interface IRoomsUsersContext {
   roomUsers: IUser[];
   indexRoomUsers(room_id: string): Promise<void>;
   kickRoomUser(data: IKickRoomUser): Promise<void>;
+  leaveRoom(room_id: string): Promise<void>;
 }
 
 const RoomsUsersContext = createContext<IRoomsUsersContext>(
@@ -43,9 +44,20 @@ const RoomsUsersProvider: React.FC = ({ children }) => {
     [handleErrors],
   );
 
+  const leaveRoom = useCallback(
+    async (room_id: string) => {
+      try {
+        await api.delete(`/rooms/users/${room_id}`);
+      } catch (err) {
+        handleErrors('Error when trying to leave room', err);
+      }
+    },
+    [handleErrors],
+  );
+
   return (
     <RoomsUsersContext.Provider
-      value={{ indexRoomUsers, roomUsers, kickRoomUser }}
+      value={{ indexRoomUsers, roomUsers, kickRoomUser, leaveRoom }}
     >
       {children}
     </RoomsUsersContext.Provider>
