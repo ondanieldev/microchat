@@ -1,8 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { Avatar, Button, HStack, Text, VStack } from '@chakra-ui/react';
 
 import IUser from 'Types/Entities/IUser';
 import { useColors } from 'Hooks/colors';
+import { useRoomsUsers } from 'Hooks/roomsUsers';
+import { useAuth } from 'Hooks/auth';
+
+import { useRooms } from 'Hooks/rooms';
 
 interface IProps {
   data: IUser;
@@ -10,12 +14,29 @@ interface IProps {
 
 const User: React.FC<IProps> = ({ data }) => {
   const { purple } = useColors();
+  const { kickRoomUser, indexRoomUsers } = useRoomsUsers();
+  const { user } = useAuth();
+  const { currentRoom } = useRooms();
 
   const [loadingKick, setLoadingKick] = useState(false);
 
-  const handleKickUser = useCallback(() => {
-    console.log('kick user');
-  }, []);
+  const showKick = useMemo(
+    () => user?.id !== data.id && currentRoom?.moderator_id === user?.id,
+    [user, data, currentRoom],
+  );
+
+  const handleKickRoomUser = useCallback(async () => {
+    if (!currentRoom) {
+      return;
+    }
+    setLoadingKick(true);
+    await kickRoomUser({
+      room_id: currentRoom.id,
+      user_id: data.id,
+    });
+    await indexRoomUsers(currentRoom.id);
+    setLoadingKick(false);
+  }, [data, kickRoomUser, indexRoomUsers, currentRoom]);
 
   return (
     <HStack py="10px" w="100%" alignItems="center">
@@ -25,13 +46,15 @@ const User: React.FC<IProps> = ({ data }) => {
           {data.nickname}
         </Text>
       </VStack>
-      <Button
-        colorScheme="purple"
-        onClick={handleKickUser}
-        isLoading={loadingKick}
-      >
-        kick
-      </Button>
+      {showKick && (
+        <Button
+          colorScheme="purple"
+          onClick={handleKickRoomUser}
+          isLoading={loadingKick}
+        >
+          kick
+        </Button>
+      )}
     </HStack>
   );
 };

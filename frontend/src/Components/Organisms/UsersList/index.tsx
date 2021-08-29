@@ -18,9 +18,8 @@ const UsersList: React.FC = () => {
 
   return (
     <VStack maxH="400px" w="100%" flex="1" overflowY="auto">
-      {roomUsers.map(roomUser => (
-        <User key={roomUser.id} data={roomUser} />
-      ))}
+      {currentRoom &&
+        roomUsers.map(roomUser => <User key={roomUser.id} data={roomUser} />)}
     </VStack>
   );
 };

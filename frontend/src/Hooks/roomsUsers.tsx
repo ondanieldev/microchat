@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 import api from 'Services/api';
+import IKickRoomUser from 'Types/DTOs/IKickRoomUser';
 import IUser from 'Types/Entities/IUser';
 import { useErrors } from './errors';
 
 interface IRoomsUsersContext {
   roomUsers: IUser[];
   indexRoomUsers(room_id: string): Promise<void>;
+  kickRoomUser(data: IKickRoomUser): Promise<void>;
 }
 
 const RoomsUsersContext = createContext<IRoomsUsersContext>(
@@ -30,8 +32,21 @@ const RoomsUsersProvider: React.FC = ({ children }) => {
     [handleErrors],
   );
 
+  const kickRoomUser = useCallback(
+    async (data: IKickRoomUser) => {
+      try {
+        await api.post('/rooms/users/kick', data);
+      } catch (err) {
+        handleErrors('Error when trying to kick user', err);
+      }
+    },
+    [handleErrors],
+  );
+
   return (
-    <RoomsUsersContext.Provider value={{ indexRoomUsers, roomUsers }}>
+    <RoomsUsersContext.Provider
+      value={{ indexRoomUsers, roomUsers, kickRoomUser }}
+    >
       {children}
     </RoomsUsersContext.Provider>
   );
