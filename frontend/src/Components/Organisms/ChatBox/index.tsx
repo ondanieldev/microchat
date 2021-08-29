@@ -1,10 +1,11 @@
 import React from 'react';
-import { useColorModeValue } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 
 import Card from 'Components/Atoms/Card';
 import { useRooms } from 'Hooks/rooms';
 import MessagesList from '../MessagesList';
 import SendMessageForm from '../SendMessageForm';
+import RoomUsers from '../RoomUsers';
 
 const ChatBox: React.FC = () => {
   const { currentRoom } = useRooms();
@@ -21,11 +22,13 @@ const ChatBox: React.FC = () => {
       flexDirection="column"
     >
       {currentRoom && (
-        <>
+        <Flex direction="column" h="100%" position="relative">
+          <RoomUsers />
+
           <MessagesList />
 
           <SendMessageForm />
-        </>
+        </Flex>
       )}
     </Card>
   );

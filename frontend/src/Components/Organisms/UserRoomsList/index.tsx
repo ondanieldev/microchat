@@ -12,7 +12,7 @@ const UserRoomsList: React.FC = () => {
   }, [indexUserRooms]);
 
   return (
-    <VStack w="100%" flex="1">
+    <VStack w="100%" flex="1" overflowY="auto">
       {searchedUserRooms.map(room => (
         <Room key={`user_${room.id}`} data={room} isUserRoom />
       ))}
