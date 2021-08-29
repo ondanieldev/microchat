@@ -69,7 +69,8 @@ class KickUser {
 
     await this.roomsUsersRepository.delete(roomUser.id);
 
-    this.cacheProvider.removeByPrefix(`rooms-users:${room.id}`);
+    this.cacheProvider.remove(`rooms-users:${room.id}`);
+    this.cacheProvider.removeByPrefix(`rooms:${user.id}`);
 
     return user;
   }
