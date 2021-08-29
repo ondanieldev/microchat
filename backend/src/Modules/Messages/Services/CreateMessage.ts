@@ -7,6 +7,7 @@ import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICa
 import ICreateMessage from '../DTOs/ICreateMessage';
 import Message from '../Infra/TypeORM/Entities/Message';
 import IMessagesRepository from '../Repositories/IMessagesRepository';
+import IMessageType from '../DTOs/IMessageType';
 
 interface IRequest {
   actor: User;
@@ -31,7 +32,7 @@ class CreateMessage {
       room_id: data.room_id,
       user_id: actor.id,
     });
-    if (!roomUser) {
+    if (!roomUser && data.type !== IMessageType.info) {
       throw new AppError('You are not participating of this room', 403);
     }
 

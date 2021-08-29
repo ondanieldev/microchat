@@ -62,7 +62,8 @@ class JoinRoom {
       ...rest,
     });
 
-    this.cacheProvider.removeByPrefix(`rooms-users:${room.id}`);
+    this.cacheProvider.remove(`rooms:${user.id}`);
+    this.cacheProvider.remove(`rooms-users:${room.id}`);
 
     return create;
   }

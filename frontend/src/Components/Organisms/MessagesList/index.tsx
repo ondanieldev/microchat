@@ -17,12 +17,16 @@ const MessagesList: React.FC = () => {
   }, [indexRoomMessages, currentRoom]);
 
   return (
-    <VStack spacing="20px" h="100%" overflowY="auto" mb="20px">
+    <VStack spacing="20px" overflowY="auto" mb="20px" flex="1">
       {roomMessages &&
         roomMessages.entities.map(message => (
           <>
-            {message.type === 'text' && <Message data={message} />}
-            {message.type === 'info' && <InfoMessage data={message} />}
+            {message.type === 'text' && (
+              <Message key={message.id} data={message} />
+            )}
+            {message.type === 'info' && (
+              <InfoMessage key={message.id} data={message} />
+            )}
           </>
         ))}
     </VStack>

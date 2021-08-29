@@ -23,7 +23,7 @@ const InfoMessage: React.FC<IProps> = ({ data }) => {
       maxW="500px"
       alignSelf="center"
     >
-      <Text>{data.content}</Text>
+      <Text textAlign="center">{data.content}</Text>
       <Text
         mt="10px"
         lineHeight="0px"
