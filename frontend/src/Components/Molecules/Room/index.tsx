@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -18,13 +18,16 @@ import { useRooms } from 'Hooks/rooms';
 interface IProps {
   data: IRoom;
   isUserRoom?: boolean;
+  onClose?: () => void;
 }
 
-const Room: React.FC<IProps> = ({ data, isUserRoom }) => {
+const Room: React.FC<IProps> = ({ data, isUserRoom, onClose }) => {
   const { user } = useAuth();
-  const { setCurrentRoom } = useRooms();
+  const { setCurrentRoom, joinRoom, indexUserRooms } = useRooms();
   const { orange, purple } = useColors();
   const hoverBackgroundColor = useColorModeValue('gray.200', 'gray.600');
+
+  const [loadingJoin, setLoadingJoin] = useState(false);
 
   const avatarColor = useMemo(
     () =>
@@ -34,22 +37,32 @@ const Room: React.FC<IProps> = ({ data, isUserRoom }) => {
     [user, data, orange, purple],
   );
 
+  const cursor = useMemo(
+    () => (isUserRoom ? 'pointer' : 'inherit'),
+    [isUserRoom],
+  );
+
+  const hover = useMemo(
+    () => (isUserRoom ? { backgroundColor: hoverBackgroundColor } : {}),
+    [isUserRoom, hoverBackgroundColor],
+  );
+
+  const px = useMemo(() => (isUserRoom ? '20px' : '0px'), [isUserRoom]);
+
+  const handleJoinRoom = useCallback(async () => {
+    setLoadingJoin(true);
+    await joinRoom(data.id);
+    await indexUserRooms();
+    setLoadingJoin(false);
+    if (onClose) onClose();
+  }, [joinRoom, data, onClose, indexUserRooms]);
+
   const handleSelectRoom = useCallback(() => {
     if (!isUserRoom) {
       return;
     }
     setCurrentRoom(data);
   }, [setCurrentRoom, data, isUserRoom]);
-
-  const cursor = useMemo(
-    () => (isUserRoom ? 'pointer' : 'inherit'),
-    [isUserRoom],
-  );
-  const hover = useMemo(
-    () => (isUserRoom ? { backgroundColor: hoverBackgroundColor } : {}),
-    [isUserRoom, hoverBackgroundColor],
-  );
-  const px = useMemo(() => (isUserRoom ? '20px' : '0px'), [isUserRoom]);
 
   return (
     <HStack
@@ -72,7 +85,15 @@ const Room: React.FC<IProps> = ({ data, isUserRoom }) => {
           </Text>
         )}
       </VStack>
-      {!isUserRoom && <Button colorScheme="purple">join</Button>}
+      {!isUserRoom && (
+        <Button
+          colorScheme="purple"
+          onClick={handleJoinRoom}
+          isLoading={loadingJoin}
+        >
+          join
+        </Button>
+      )}
     </HStack>
   );
 };

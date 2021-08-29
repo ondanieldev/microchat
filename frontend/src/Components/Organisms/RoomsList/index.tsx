@@ -7,9 +7,10 @@ import { useRooms } from 'Hooks/rooms';
 
 interface IProps {
   roomName?: string;
+  onClose?: () => void;
 }
 
-const RoomsList: React.FC<IProps> = ({ roomName }) => {
+const RoomsList: React.FC<IProps> = ({ roomName, onClose }) => {
   const { indexRooms, rooms, roomsLimit } = useRooms();
 
   const [page, setPage] = useState(1);
@@ -50,7 +51,7 @@ const RoomsList: React.FC<IProps> = ({ roomName }) => {
     <VStack spacing="20px" pt="20px">
       <VStack maxH="400px" w="100%" flex="1" overflowY="auto">
         {allRooms.map(room => (
-          <Room key={room.id} data={room} />
+          <Room key={room.id} data={room} onClose={onClose} />
         ))}
       </VStack>
       {showLoadMore && (

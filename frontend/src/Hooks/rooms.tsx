@@ -27,6 +27,7 @@ interface IRoomsContext {
   searchUserRooms(name: string): void;
   createRoom(data: ICreateRoom & IDefaultRequest): Promise<void>;
   indexRooms(data: IFIlterRooms): Promise<void>;
+  joinRoom(room_id: string): Promise<void>;
 }
 
 const RoomsContext = createContext<IRoomsContext>({} as IRoomsContext);
@@ -93,6 +94,19 @@ const RoomsProvider: React.FC = ({ children }) => {
     [handleErrors],
   );
 
+  const joinRoom = useCallback(
+    async (room_id: string) => {
+      try {
+        await api.post('/rooms/users', {
+          room_id,
+        });
+      } catch (err) {
+        handleErrors('Error when trying to join room', err);
+      }
+    },
+    [handleErrors],
+  );
+
   useEffect(() => {
     setSearchedUserRooms(userRooms);
   }, [userRooms]);
@@ -110,6 +124,7 @@ const RoomsProvider: React.FC = ({ children }) => {
         indexRooms,
         rooms,
         roomsLimit,
+        joinRoom,
       }}
     >
       {children}

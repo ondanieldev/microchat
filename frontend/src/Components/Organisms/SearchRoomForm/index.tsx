@@ -56,7 +56,7 @@ const SearchRoomForm: React.FC = () => {
               <Input type="text" name="name" placeholder="room's name" />
             </Form>
 
-            <RoomsList roomName={roomName} />
+            <RoomsList roomName={roomName} onClose={onClose} />
           </ModalBody>
 
           <ModalFooter>
