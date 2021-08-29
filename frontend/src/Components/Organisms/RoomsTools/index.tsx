@@ -3,6 +3,7 @@ import { HStack } from '@chakra-ui/react';
 
 import CreateRoomForm from '../CreateRoomForm';
 import SearchRoomForm from '../SearchRoomForm';
+import SignOutButton from '../SignOutButton';
 
 const RoomsTools: React.FC = () => {
   return (
@@ -10,6 +11,8 @@ const RoomsTools: React.FC = () => {
       <CreateRoomForm />
 
       <SearchRoomForm />
+
+      <SignOutButton />
     </HStack>
   );
 };
