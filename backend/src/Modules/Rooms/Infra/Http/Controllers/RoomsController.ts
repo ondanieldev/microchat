@@ -26,7 +26,7 @@ class RoomsController {
       .execute({
         actor: user,
         data: {
-          content: `Room created by ${user.nickname}.`,
+          content: `${user.nickname} has created the room.`,
           room_id: room.id,
           type: IMessageType.info,
         },
