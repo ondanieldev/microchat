@@ -1,4 +1,10 @@
-import { EntityRepository, getRepository, Repository } from 'typeorm';
+import {
+  EntityRepository,
+  getRepository,
+  Repository,
+  Like,
+  FindConditions,
+} from 'typeorm';
 
 import IRoomsRepository from 'Modules/Rooms/Repositories/IRoomsRepository';
 import ICreateRoom from 'Modules/Rooms/DTOs/ICreateRoom';
@@ -26,8 +32,13 @@ class RoomsRepository implements IRoomsRepository {
     page,
     ...rest
   }: IFilterRooms): Promise<IPaginatedRooms> {
+    const where = { ...rest } as FindConditions<Room>;
+    if (where.name) {
+      where.name = Like(`%${where.name}%`);
+    }
+
     const response = await this.ormRepository.findAndCount({
-      where: rest,
+      where,
       take: limit,
       skip: ((page || 1) - 1) * (limit || 0),
       order: {
