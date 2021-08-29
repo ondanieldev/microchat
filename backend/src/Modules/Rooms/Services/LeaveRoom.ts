@@ -29,7 +29,8 @@ class LeaveRoom {
       throw new AppError('You are not a participant of this room!', 403);
     }
 
-    this.cacheProvider.removeByPrefix(`rooms-users:${room_id}`);
+    this.cacheProvider.remove(`rooms-users:${room_id}`);
+    this.cacheProvider.remove(`rooms:${actor.id}`);
 
     await this.roomsUsersRepository.delete(roomUser.id);
   }
