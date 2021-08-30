@@ -1,12 +1,6 @@
 import axios from 'axios';
 
-import LocalStorageConfig from 'Config/LocalStorageConfig';
-
-const getAuthToken = (): string | null => {
-  const user = localStorage.getItem(LocalStorageConfig.userKey);
-  if (!user) return null;
-  return JSON.parse(user).token;
-};
+import getAuthToken from 'Helpers/getAuthToken';
 
 const isDevelopment =
   process.env.REACT_APP_IS_DEV || process.env.NODE_ENV === 'development';
