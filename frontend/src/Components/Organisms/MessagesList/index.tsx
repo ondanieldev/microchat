@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { VStack } from '@chakra-ui/react';
+import { Flex, VStack } from '@chakra-ui/react';
 
 import Message from 'Components/Molecules/TextMessage';
 import InfoMessage from 'Components/Molecules/InfoMessage';
@@ -20,14 +20,10 @@ const MessagesList: React.FC = () => {
     <VStack spacing="20px" overflowY="auto" mb="20px" flex="1">
       {roomMessages &&
         roomMessages.entities.map(message => (
-          <>
-            {message.type === 'text' && (
-              <Message key={message.id} data={message} />
-            )}
-            {message.type === 'info' && (
-              <InfoMessage key={message.id} data={message} />
-            )}
-          </>
+          <Flex key={message.id} direction="column" w="100%">
+            {message.type === 'text' && <Message data={message} />}
+            {message.type === 'info' && <InfoMessage data={message} />}
+          </Flex>
         ))}
     </VStack>
   );

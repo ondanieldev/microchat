@@ -45,7 +45,8 @@ const RoomsProvider: React.FC = ({ children }) => {
   const indexUserRooms = useCallback(async () => {
     try {
       const response = await api.get('/rooms/users/me');
-      setUserRooms(response.data);
+      const newUserRooms = response.data as IRoom[];
+      setUserRooms(newUserRooms);
     } catch (err) {
       handleErrors('Error when trying to index rooms', err);
     }
