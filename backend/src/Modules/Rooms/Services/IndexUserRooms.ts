@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import { differenceInMilliseconds } from 'date-fns';
 
 import User from 'Modules/Users/Infra/TypeORM/Entities/User';
 import ICacheProvider from 'Shared/Containers/Providers/CacheProvider/Models/ICacheProvider';
@@ -42,6 +43,15 @@ class IndexUserRooms {
       });
       room.last_message = lastMessage;
     }
+
+    rooms.sort((a, b) => {
+      if (!a.last_message || !b.last_message) return 0;
+      const aTime = a.last_message.created_at.getTime();
+      const bTime = b.last_message.created_at.getTime();
+      console.log(aTime, bTime);
+      console.log(aTime + bTime);
+      return differenceInMilliseconds(aTime, bTime) * -1;
+    });
 
     return rooms;
   }
