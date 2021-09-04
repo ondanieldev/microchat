@@ -23,8 +23,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: '.,!node_modules'
-          target: 'www/microchat'
+          source: "./backend,!node_modules"
+          target: "www/microchat"
 
       - name: Run all scripts
         uses: appleboy/ssh-action@master
