@@ -29,7 +29,7 @@ class Message {
   @Column()
   room_id: string;
 
-  @Column({ enum: enumToArray.execute(IMessageType) })
+  @Column({ type: 'enum', enum: enumToArray.execute(IMessageType) })
   type: IMessageType;
 
   @CreateDateColumn()
