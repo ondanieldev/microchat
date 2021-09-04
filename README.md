@@ -78,7 +78,9 @@
 
 2. Run `yarn build` or `npm run build`
 
-3. Run `yarn prod` or `npm run prod`
+3. Remember to setup all config files listed on the `How to run` section
+
+4. Run `yarn prod` or `npm run prod`
 
 ### Frontend
 
@@ -87,6 +89,16 @@
 2. Run `yarn build` or `npm run build`
 
 3. Serve the static files using any serving lib or deploy it at any CDN
+
+## How to test
+
+### Backend
+
+1. Go to `backend` folder
+
+2. Run `yarn test` or `npm run test`
+
+3. Open `coverage/lcov-report/index.html` file to see the coverage reports
 
 ## How to contribute
 
