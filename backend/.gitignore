@@ -1,0 +1,7 @@
+.env
+node_modules
+dist
+ormconfig.json
+docker-compose.override.yml
+coverage
+ecosystem.config.js
