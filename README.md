@@ -86,7 +86,7 @@
 
 2. Run `yarn build` or `npm run build`
 
-3 Serve the static files using any serving lib or deploy at any CDN
+3. Serve the static files using any serving lib or deploy it at any CDN
 
 ## How to contribute
 
