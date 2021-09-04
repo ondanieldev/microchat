@@ -9,7 +9,7 @@ class TypeORM {
       await createConnection();
       logger.info('Postgresql connected successfully');
     } catch (err) {
-      logger.error('Postgresql not connected successfully');
+      logger.error(err);
     }
   }
 }

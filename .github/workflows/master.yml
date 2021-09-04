@@ -23,8 +23,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
-          source: "./backend,!node_modules"
-          target: "www/microchat"
+          source: "./backend/*"
+          target: "microchat"
+          strip_components: 1
 
       - name: Run all scripts
         uses: appleboy/ssh-action@master
@@ -34,7 +35,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/www/microchat
+            cd ~/microchat
             yarn install
             yarn typeorm migration:run
             yarn test
