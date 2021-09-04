@@ -1,6 +1,11 @@
 {
-  "name": "microchat_backend",
+  "name": "microchat-backend",
   "version": "1.0.0",
+  "author": {
+    "email": "me@ondaniel.com.br",
+    "name": "Daniel Oliveira",
+    "url": "https://ondaniel.com.br/"
+  },
   "description": "Simple chat made with microservice architecture.",
   "homepage": "https://microchat.ondaniel.com.br/",
   "license": "MIT",
@@ -8,11 +13,7 @@
     "url": "https://github.com/ondanieldev/microchat/",
     "type": "git"
   },
-  "author": {
-    "email": "me@ondaniel.com.br",
-    "name": "Daniel Oliveira",
-    "url": "https://ondaniel.com.br/"
-  },
+  "private": true,
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --ignore node_modules ./src/Shared/Infra/Http/index.ts",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
