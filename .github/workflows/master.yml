@@ -25,6 +25,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "./backend/**/*"
           target: "microchat"
+          strip_components: 1
 
       - name: Run all scripts
         uses: appleboy/ssh-action@master
