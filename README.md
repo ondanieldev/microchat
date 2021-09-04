@@ -80,7 +80,9 @@
 
 3. Remember to setup all config files listed on the `How to run` section
 
-4. Run `yarn prod` or `npm run prod`
+4. Copy `ecosystem.config.example.js` to a new `ecosystem.config.js` file and change its data if you want to
+
+5. Run `yarn prod` or `npm run prod` to start the project on the production mode
 
 ### Frontend
 
