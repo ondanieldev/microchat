@@ -38,6 +38,5 @@ jobs:
             cd ~/microchat
             yarn install
             yarn typeorm migration:run
-            yarn test
             yarn build
             yarn prod
