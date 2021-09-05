@@ -1,11 +1,25 @@
 import React from 'react';
-import { HStack, StackProps } from '@chakra-ui/react';
+import {
+  Stack,
+  StackDirection,
+  StackProps,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 
-const InputGroup: React.FC<StackProps> = ({ children, ...rest }) => {
+interface IProps extends StackProps {
+  isWrappable?: boolean;
+}
+
+const InputGroup: React.FC<IProps> = ({ children, isWrappable, ...rest }) => {
+  const direction = useBreakpointValue<StackDirection>({
+    base: 'column',
+    md: 'row',
+  });
+
   return (
-    <HStack spacing="20px" {...rest}>
+    <Stack direction={isWrappable ? direction : 'row'} spacing="20px" {...rest}>
       {children}
-    </HStack>
+    </Stack>
   );
 };
 

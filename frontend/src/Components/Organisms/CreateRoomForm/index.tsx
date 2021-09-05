@@ -56,7 +56,7 @@ const CreateRoomForm: React.FC = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mx="20px">
           <ModalHeader>create room</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

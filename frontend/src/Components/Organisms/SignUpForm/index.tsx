@@ -36,7 +36,7 @@ const SignUpForm: React.FC = () => {
         name="nickname"
         placeholder="nickname"
       />
-      <InputGroup>
+      <InputGroup isWrappable>
         <Input
           focusColor={purple}
           type="password"

@@ -4,6 +4,7 @@ import {
   Button,
   HStack,
   Text,
+  useBreakpointValue,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
@@ -26,6 +27,10 @@ const Room: React.FC<IProps> = ({ data, isUserRoom, onClose }) => {
   const { setCurrentRoom, joinRoom, indexUserRooms } = useRooms();
   const { orange, purple } = useColors();
   const hoverBackgroundColor = useColorModeValue('gray.200', 'gray.600');
+  const textMaxW = useBreakpointValue({
+    base: '100%',
+    md: '200px',
+  });
 
   const [loadingJoin, setLoadingJoin] = useState(false);
 
@@ -76,11 +81,11 @@ const Room: React.FC<IProps> = ({ data, isUserRoom, onClose }) => {
     >
       <Avatar name={data.name} backgroundColor={avatarColor} />
       <VStack spacing="5px" alignItems="flex-start" flex="1">
-        <Text lineHeight="20px" fontWeight="bold" maxW="200px" isTruncated>
+        <Text lineHeight="20px" fontWeight="bold" maxW={textMaxW} isTruncated>
           {data.name}
         </Text>
         {data.last_message && (
-          <Text lineHeight="20px" maxW="200px" isTruncated>
+          <Text lineHeight="20px" maxW={textMaxW} isTruncated>
             {data.last_message.content}
           </Text>
         )}
