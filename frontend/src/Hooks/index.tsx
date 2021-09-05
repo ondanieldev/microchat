@@ -7,6 +7,7 @@ import RoomsProvider from './rooms';
 import MessagesProvider from './messages';
 import RoomsUsersProvider from './roomsUsers';
 import SocketsProvider from './sockets';
+import RoomsBarProvider from './roomsBar';
 
 const providers = [
   ErrorsProvider,
@@ -16,6 +17,7 @@ const providers = [
   MessagesProvider,
   RoomsUsersProvider,
   SocketsProvider,
+  RoomsBarProvider,
 ];
 
 const CombineProviders: React.FC = ({ children }) => {

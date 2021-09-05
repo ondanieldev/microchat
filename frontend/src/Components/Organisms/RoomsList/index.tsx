@@ -16,6 +16,7 @@ const RoomsList: React.FC<IProps> = ({ roomName, onClose }) => {
   const [page, setPage] = useState(1);
   const [allRooms, setAllRooms] = useState<IRoom[]>([]);
   const [lastRoomName, setLastRoomName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const showLoadMore = useMemo(() => {
     if (!rooms) {
@@ -29,9 +30,12 @@ const RoomsList: React.FC<IProps> = ({ roomName, onClose }) => {
   }, [page]);
 
   useEffect(() => {
+    setLoading(true);
     indexRooms({
       name: roomName || undefined,
       page,
+    }).finally(() => {
+      setLoading(false);
     });
   }, [indexRooms, roomName, page]);
 
@@ -55,7 +59,12 @@ const RoomsList: React.FC<IProps> = ({ roomName, onClose }) => {
         ))}
       </VStack>
       {showLoadMore && (
-        <Button onClick={handleLoadMore} variant="outline" colorScheme="purple">
+        <Button
+          onClick={handleLoadMore}
+          isLoading={loading}
+          variant="outline"
+          colorScheme="purple"
+        >
           load more
         </Button>
       )}

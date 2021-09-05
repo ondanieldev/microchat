@@ -48,7 +48,7 @@ const SearchRoomForm: React.FC = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mx="20px">
           <ModalHeader>search rooms</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

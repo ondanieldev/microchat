@@ -30,7 +30,7 @@ const RoomUsers: React.FC = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mx="20px">
           <ModalHeader>room participants</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

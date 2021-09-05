@@ -6,7 +6,7 @@ import LeaveRoom from '../LeaveRoom';
 
 const ChatBoxActionButtons: React.FC = () => {
   return (
-    <HStack spacing="20px" position="absolute" right="0">
+    <HStack spacing="20px" position="absolute" right="20px" zIndex="100">
       <RoomUsers />
 
       <LeaveRoom />
