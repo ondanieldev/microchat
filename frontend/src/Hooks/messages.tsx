@@ -10,7 +10,7 @@ import { useErrors } from './errors';
 
 interface IMessagesContext {
   roomMessages: ICursorPaginated<IMessage> | null;
-  indexRoomMessages(data: IFIlterMessages): Promise<void>;
+  indexRoomMessages(data: IFIlterMessages, concat?: IMessage[]): Promise<void>;
   sendMessage(data: ISendMessage & IDefaultRequest): Promise<void>;
 }
 
@@ -23,20 +23,25 @@ const MessagesProvider: React.FC = ({ children }) => {
     useState<ICursorPaginated<IMessage> | null>(null);
 
   const indexRoomMessages = useCallback(
-    async ({ room_id, ...data }: IFIlterMessages) => {
+    async ({ room_id, ...data }: IFIlterMessages, concat?: IMessage[]) => {
       try {
         const response = await api.get(`/messages/${room_id}`, {
           params: {
-            limit: 25,
+            limit: 15,
             ...data,
           },
         });
 
-        const { entities } = response.data;
-        entities.reverse();
+        const newEntities = response.data.entities as IMessage[];
+        newEntities.reverse();
+
+        let allEntities = newEntities;
+        if (concat) {
+          allEntities = [...newEntities, ...concat];
+        }
 
         setRoomMessages({
-          entities,
+          entities: allEntities,
           total: response.data.total,
           next_cursor: response.data.next_cursor,
         });

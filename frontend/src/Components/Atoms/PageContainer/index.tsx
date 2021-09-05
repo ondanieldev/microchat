@@ -1,10 +1,20 @@
 import React from 'react';
-import { Container, ContainerProps } from '@chakra-ui/react';
+import {
+  Container,
+  ContainerProps,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 
 const PageContainer: React.FC<ContainerProps> = ({ children, ...rest }) => {
+  const padding = useBreakpointValue({
+    base: '20px',
+    md: '60px',
+  });
+
   return (
     <Container
-      p="60px"
+      px={padding}
+      py="60px"
       w="100%"
       h="100vh"
       display="flex"
