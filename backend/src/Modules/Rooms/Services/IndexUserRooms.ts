@@ -44,7 +44,6 @@ class IndexUserRooms {
       room.last_message = lastMessage;
     }
 
-    console.log(rooms);
     rooms.sort((a, b) => {
       const aDate = a.last_message?.created_at.getTime();
       const bDate = b.last_message?.created_at.getTime();
