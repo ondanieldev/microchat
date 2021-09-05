@@ -4,6 +4,7 @@ import RoomUser from 'Modules/Rooms/Infra/TypeORM/Entities/RoomUser';
 import ICreateRoomUser from 'Modules/Rooms/DTOs/ICreateRoomUser';
 import FilterEntities from 'Shared/Helpers/FilterEntities';
 import IFilterRoomsUsers from 'Modules/Rooms/DTOs/IFilterRoomsUsers';
+import Room from 'Modules/Rooms/Infra/TypeORM/Entities/Room';
 import IRoomsUsersRepository from '../IRoomsUsersRepository';
 
 class FakeRoomsUsersRepository implements IRoomsUsersRepository {
@@ -11,10 +12,13 @@ class FakeRoomsUsersRepository implements IRoomsUsersRepository {
 
   public async create(data: ICreateRoomUser): Promise<RoomUser> {
     const roomUser = new RoomUser();
+    const room = new Room();
+    room.id = data.room_id;
     Object.assign(roomUser, data, {
       id: v4(),
       created_at: new Date(),
       updated_at: new Date(),
+      room,
     });
     this.roomsUsers.push(roomUser);
     return roomUser;
