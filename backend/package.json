@@ -6,7 +6,7 @@
     "name": "Daniel Oliveira",
     "url": "https://ondaniel.com.br/"
   },
-  "description": "Simple chat made with microservice architecture.",
+  "description": "Simple chat made withOUT microservice architecture.",
   "homepage": "https://microchat.ondaniel.com.br/",
   "license": "MIT",
   "repository": {

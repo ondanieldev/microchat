@@ -9,7 +9,7 @@
 
 ## Introduction
 
-[Microchat](https://microchat.ondaniel.com.br/) is a simple chat made with microservices architecture. First, it was being developed as a challenge to join [Ioasys](https://ioasys.com.br/). However, I was hired by another company, so I developed it just to learn more about sockets and microservices.
+[Microchat](https://microchat.ondaniel.com.br/) is a simple chat made withOUT microservices architecture. First, it was being developed as a challenge to join [Ioasys](https://ioasys.com.br/). However, I was hired by another company, so I developed it just to learn more about sockets and NOT microservices.
 
 ## Features
 
